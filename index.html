@@ -135,8 +135,9 @@ footer span{font-size:11px;color:var(--text2);}
 <div class="tabs">
   <button class="tab active" onclick="showView('home')">home</button>
   <button class="tab" id="tab-offer" onclick="showView('offer')"><span class="tab-dot"></span>offer builder</button>
-  <button class="tab" id="tab-email" onclick="showView('home')"><span class="tab-dot off"></span>email templates</button>
   <button class="tab" id="tab-price" onclick="showView('price')"><span class="tab-dot"></span>price calculator</button>
+  <button class="tab" id="tab-confirm" onclick="showView('confirm')"><span class="tab-dot"></span>booking confirmation</button>
+  <button class="tab" id="tab-email" onclick="showView('home')"><span class="tab-dot off"></span>email templates</button>
 </div>
 
 <!-- HOME VIEW -->
@@ -172,6 +173,12 @@ footer span{font-size:11px;color:var(--text2);}
   <div class="section" style="padding-top:0">
     <div class="section-label">operations</div>
     <div class="tools-grid">
+      <button class="tool-card" onclick="showView('confirm')">
+        <div class="tool-tag"><span class="tool-dot"></span>active</div>
+        <div class="tool-name">booking confirmation</div>
+        <div class="tool-desc">generate a branded PDF booking confirmation to send to your clients.</div>
+        <span class="tool-arrow">↗</span>
+      </button>
       <div class="tool-card coming-soon">
         <div class="tool-tag"><span class="tool-dot off"></span>coming soon</div>
         <div class="tool-name">client checklist</div>
@@ -445,6 +452,94 @@ footer span{font-size:11px;color:var(--text2);}
   </div>
 </div>
 
+<!-- BOOKING CONFIRMATION VIEW -->
+<div class="view" id="view-confirm">
+  <div class="ob-wrap">
+    <div style="font-family:'DM Mono',monospace;font-size:15px;font-weight:400;color:#0e0e0e;letter-spacing:.02em;margin-bottom:1.25rem;">gloobles</div>
+    <div class="app">
+      <div class="panel">
+        <div class="ptitle">Booking details</div>
+
+        <div class="sec">
+          <div class="lbl">Guest name</div>
+          <input type="text" id="cf-guest" placeholder="Jean Marie Hosatte" />
+        </div>
+        <div class="sec">
+          <div class="lbl">Booking number</div>
+          <input type="text" id="cf-booking" placeholder="54794887" />
+        </div>
+        <div class="sec">
+          <div class="lbl">Destination (city, country)</div>
+          <input type="text" id="cf-dest" placeholder="Shanghai, China" />
+        </div>
+        <div class="sec">
+          <div class="lbl">Hotel name</div>
+          <input type="text" id="cf-hotel" placeholder="Park Hyatt Shanghai" />
+        </div>
+        <div class="sec">
+          <div class="lbl">Hotel address</div>
+          <input type="text" id="cf-address" placeholder="100 Century Avenue, Pudong, Shanghai, CN 200120" />
+        </div>
+        <div class="sec">
+          <div class="lbl">Travel dates</div>
+          <div class="row2">
+            <div class="cal-wrap">
+              <input type="text" id="cf-in" placeholder="Check-in" readonly onclick="tc2('cfi')" />
+              <span class="cal-ico">📅</span>
+              <div class="cal-pop" id="cfi"></div>
+            </div>
+            <div class="cal-wrap">
+              <input type="text" id="cf-out" placeholder="Check-out" readonly onclick="tc2('cfo')" />
+              <span class="cal-ico">📅</span>
+              <div class="cal-pop" id="cfo"></div>
+            </div>
+          </div>
+        </div>
+        <div class="sec">
+          <div class="lbl">Check-in time</div>
+          <input type="text" id="cf-cin-time" placeholder="From 15:00 pm" />
+        </div>
+        <div class="sec">
+          <div class="lbl">Check-out time</div>
+          <input type="text" id="cf-cout-time" placeholder="From 11:00 am" />
+        </div>
+        <div class="sec">
+          <div class="lbl">Room type</div>
+          <input type="text" id="cf-room" placeholder="King City View Deluxe Room" />
+        </div>
+        <div class="sec">
+          <div class="lbl">Price (inc. VAT)</div>
+          <input type="text" id="cf-price" placeholder="580€ pour deux nuits" />
+        </div>
+        <div class="sec">
+          <div class="lbl">Cancellation policy</div>
+          <input type="text" id="cf-cxl" placeholder="Your reservation is non refundable" />
+        </div>
+        <div class="sec">
+          <div class="lbl">Rate inclusion</div>
+          <input type="text" id="cf-inclusion" placeholder="Breakfast is not included in the rate" />
+        </div>
+        <div class="sec">
+          <div class="lbl">Destination photo</div>
+          <input type="file" id="cf-photo" accept="image/*" onchange="previewPhoto(this)" style="font-size:12px;padding:6px;" />
+          <div id="cf-photo-preview" style="margin-top:8px;display:none;">
+            <img id="cf-photo-img" style="width:100%;border-radius:var(--radius-sm);max-height:140px;object-fit:cover;" />
+          </div>
+        </div>
+        <button class="gen-btn" onclick="generatePDF()">Generate PDF confirmation</button>
+      </div>
+
+      <!-- PREVIEW -->
+      <div class="panel" style="display:flex;flex-direction:column;gap:10px;">
+        <div class="ptitle">Preview</div>
+        <div id="cf-preview" style="background:#f5f4f0;border-radius:var(--radius-sm);padding:20px;font-family:'DM Mono',monospace;flex:1;min-height:400px;">
+          <div style="text-align:center;font-size:12px;color:#9E9E9E;padding:60px 0;">Fill the form and click Generate PDF</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <footer>
   <span>gloobles.com — internal use only</span>
   <span>Amsterdam</span>
@@ -452,11 +547,11 @@ footer span{font-size:11px;color:var(--text2);}
 
 <script>
 // --- VIEW SWITCHING ---
+const tabMap={home:0,offer:1,price:2,confirm:3};
 function showView(name){
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.getElementById('view-'+name).classList.add('active');
-  const tabMap={home:0,offer:1,price:3};
   if(tabMap[name]!==undefined) document.querySelectorAll('.tab')[tabMap[name]].classList.add('active');
   if(name==='price'&&!fxRates)fetchFX();
 }
@@ -478,11 +573,10 @@ function getVat(){
   return parseFloat(sel)||0;
 }
 
-document.addEventListener('DOMContentLoaded',function(){
-  document.getElementById('c-country').addEventListener('change',function(){
-    document.getElementById('c-vat-custom').style.display=this.value==='custom'?'block':'none';
-    calcComm();
-  });
+const cCountry=document.getElementById('c-country');
+if(cCountry) cCountry.addEventListener('change',function(){
+  document.getElementById('c-vat-custom').style.display=this.value==='custom'?'block':'none';
+  calcComm();
 });
 
 function calcComm(){
@@ -731,14 +825,188 @@ function fmtWa(s){
     .replace(/_([^_]+)_/g,'<em>$1</em>')
     .replace(/\n/g,'<br>');
 }
-function copyIt(){
-  if(!lastMsg)return;
-  navigator.clipboard.writeText(lastMsg).then(()=>{
-    const b=document.getElementById('copybtn');
-    b.textContent='Copied ✓';
-    setTimeout(()=>b.textContent='Copy message',2000);
-  });
+// --- BOOKING CONFIRMATION ---
+let cals2={cfi:{y:2026,m:3},cfo:{y:2026,m:3}};
+let picked2={cfi:null,cfo:null};
+let inp2={cfi:'cf-in',cfo:'cf-out'};
+let photoDataUrl=null;
+
+function tc2(id){
+  const pop=document.getElementById(id);
+  const was=pop.classList.contains('open');
+  document.querySelectorAll('.cal-pop').forEach(p=>p.classList.remove('open'));
+  if(!was){rc2(id);pop.classList.add('open');}
+}
+function rc2(id){
+  const{y,m}=cals2[id];
+  const first=new Date(y,m,1).getDay();
+  const dim=new Date(y,m+1,0).getDate();
+  const td=new Date();
+  const s=picked2[id];
+  let h=`<div class="cal-nav"><button onclick="cn2('${id}',-1)">‹</button><span>${MONTHS[m]} ${y}</span><button onclick="cn2('${id}',1)">›</button></div><div class="cal-grid">`;
+  DNAMES.forEach(d=>h+=`<div class="cdn">${d}</div>`);
+  for(let i=0;i<first;i++)h+=`<div class="cd em"></div>`;
+  for(let d=1;d<=dim;d++){
+    const it=d===td.getDate()&&m===td.getMonth()&&y===td.getFullYear();
+    const is=s&&s.d===d&&s.m===m&&s.y===y;
+    h+=`<div class="cd${it?' td':''}${is?' sel':''}" onclick="pd2('${id}',${y},${m},${d})">${d}</div>`;
+  }
+  h+=`</div>`;
+  document.getElementById(id).innerHTML=h;
+}
+function cn2(id,dir){
+  let{y,m}=cals2[id];m+=dir;
+  if(m<0){m=11;y--;}if(m>11){m=0;y++;}
+  cals2[id]={y,m};rc2(id);
+}
+function pd2(id,y,m,d){
+  picked2[id]={y,m,d};
+  const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById(inp2[id]).value=`${months[m]} ${d}th, ${y}`;
+  document.getElementById(id).classList.remove('open');
+}
+
+function previewPhoto(input){
+  const file=input.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    photoDataUrl=e.target.result;
+    document.getElementById('cf-photo-img').src=photoDataUrl;
+    document.getElementById('cf-photo-preview').style.display='block';
+  };
+  reader.readAsDataURL(file);
+}
+
+function generatePDF(){
+  if(!window.jspdf){
+    const s=document.createElement('script');
+    s.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+    s.onload=()=>_doGeneratePDF();
+    document.head.appendChild(s);
+  } else {
+    _doGeneratePDF();
+  }
+}
+function _doGeneratePDF(){
+  const g=v=>document.getElementById(v).value.trim();
+  const guest=g('cf-guest')||'Guest';
+  const firstName=guest.split(' ')[0];
+  const booking=g('cf-booking');
+  const dest=g('cf-dest');
+  const hotel=g('cf-hotel');
+  const address=g('cf-address');
+  const cin=g('cf-in');
+  const cout=g('cf-out');
+  const cinTime=g('cf-cin-time')||'From 15:00 pm';
+  const coutTime=g('cf-cout-time')||'From 11:00 am';
+  const room=g('cf-room');
+  const price=g('cf-price');
+  const cxl=g('cf-cxl');
+  const inclusion=g('cf-inclusion');
+
+  // Update preview
+  document.getElementById('cf-preview').innerHTML=`
+    <div style="max-width:480px;margin:0 auto;font-family:'DM Mono',monospace;font-size:12px;color:#0e0e0e;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:20px;font-size:11px;color:#888;">
+        <span>gloobles</span><span>${dest}</span>
+      </div>
+      <div style="font-size:22px;font-weight:700;letter-spacing:.05em;margin-bottom:4px;">HI, ${firstName.toUpperCase()}!</div>
+      <div style="font-size:12px;color:#555;margin-bottom:16px;">Here is your booking confirmation.</div>
+      ${photoDataUrl?`<img src="${photoDataUrl}" style="width:100%;border-radius:6px;max-height:200px;object-fit:cover;margin-bottom:16px;"/>` : '<div style="width:100%;height:140px;background:#e8e6e1;border-radius:6px;margin-bottom:16px;display:flex;align-items:center;justify-content:center;font-size:11px;color:#aaa;">destination photo</div>'}
+      <div style="border-top:0.5px solid #ddd;padding:10px 0;"><span style="font-size:10px;color:#888;display:block;">booking number</span>${booking}</div>
+      <div style="border-top:0.5px solid #ddd;padding:10px 0;"><span style="font-size:10px;color:#888;display:block;">location</span><strong>${hotel}</strong><br/><span style="color:#666;font-size:11px;">${address}</span></div>
+      <div style="border-top:0.5px solid #ddd;padding:10px 0;display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div><span style="font-size:10px;color:#888;display:block;">dates</span>${cin}<br/><span style="color:#888;font-size:10px;">— [${cinTime}]</span></div>
+        <div><span style="font-size:10px;color:#888;display:block;">dates</span>${cout}<br/><span style="color:#888;font-size:10px;">— [${coutTime}]</span></div>
+      </div>
+      <div style="border-top:0.5px solid #ddd;padding:10px 0;display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div><span style="font-size:10px;color:#888;display:block;">guests</span>${guest}</div>
+        <div><span style="font-size:10px;color:#888;display:block;">price (inc. VAT)</span>${price}</div>
+      </div>
+      <div style="border-top:0.5px solid #ddd;padding:10px 0;"><span style="font-size:10px;color:#888;display:block;">room type</span>${room}</div>
+      <div style="border-top:0.5px solid #ddd;padding:10px 0;"><span style="font-size:10px;color:#888;display:block;">cancelation policy</span>${cxl}</div>
+      <div style="border-top:0.5px solid #ddd;padding:10px 0;font-size:14px;font-weight:600;">the full scoop</div>
+      <div style="border-top:0.5px solid #ddd;padding:10px 0;"><span style="font-size:10px;color:#888;display:block;">rate inclusion</span>${inclusion}</div>
+      <div style="border-top:0.5px solid #ddd;padding:16px 0;text-align:center;font-size:10px;color:#888;">curated travel tips at your fingertips</div>
+    </div>`;
+
+  // Generate PDF with jsPDF
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({unit:'mm',format:'a4'});
+  const W=210,M=20,CW=W-M*2;
+  let y=20;
+
+  // Header
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(9);
+  doc.setTextColor(120,120,120);
+  doc.text('gloobles',M,y);
+  doc.text(dest,W-M,y,{align:'right'});
+  y+=14;
+
+  // Hi name
+  doc.setFont('helvetica','bold');
+  doc.setFontSize(22);
+  doc.setTextColor(14,14,14);
+  doc.text(`HI, ${firstName.toUpperCase()}!`,M,y);
+  y+=8;
+  doc.setFont('helvetica','normal');
+  doc.setFontSize(10);
+  doc.setTextColor(80,80,80);
+  doc.text('Here is your booking confirmation.',M,y);
+  y+=10;
+
+  // Photo
+  if(photoDataUrl){
+    try{
+      doc.addImage(photoDataUrl,'JPEG',M,y,CW,55);
+      y+=60;
+    }catch(e){}
+  } else {
+    doc.setFillColor(235,233,228);
+    doc.rect(M,y,CW,45,'F');
+    y+=50;
+  }
+
+  // Helper: field row
+  const field=(label,value,x2,label2,value2)=>{
+    doc.setDrawColor(220,221,216);
+    doc.line(M,y,W-M,y);
+    y+=5;
+    doc.setFontSize(8);doc.setTextColor(150,150,150);doc.setFont('helvetica','normal');
+    doc.text(label,M,y);
+    if(label2)doc.text(label2,W/2,y);
+    y+=5;
+    doc.setFontSize(10);doc.setTextColor(14,14,14);doc.setFont('helvetica','normal');
+    doc.text(value,M,y,{maxWidth:label2?CW/2-4:CW});
+    if(value2)doc.text(value2,W/2,y,{maxWidth:CW/2});
+    y+=8;
+  };
+
+  field('booking number',booking);
+  field('location',hotel+'\n'+address);
+  y+=2;
+  field('dates',`${cin}\n— [${cinTime}]`,'dates',`${cout}\n— [${coutTime}]`);
+  field('guests',guest,'price (inc. VAT)',price);
+  field('room type',room);
+  field('cancelation policy',cxl);
+
+  // Full scoop
+  doc.setDrawColor(220,221,216);doc.line(M,y,W-M,y);y+=5;
+  doc.setFontSize(13);doc.setFont('helvetica','bold');doc.setTextColor(14,14,14);
+  doc.text('the full scoop',M,y);y+=8;
+  field('rate inclusion',inclusion);
+
+  // Footer
+  doc.setDrawColor(220,221,216);doc.line(M,y,W-M,y);y+=8;
+  doc.setFontSize(9);doc.setFont('helvetica','normal');doc.setTextColor(150,150,150);
+  doc.text('curated travel tips at your fingertips',W/2,y,{align:'center'});
+
+  const filename=`gloobles_confirmation_${guest.replace(/\s+/g,'_')}_x_${hotel.replace(/\s+/g,'_')}.pdf`;
+  doc.save(filename);
 }
 </script>
+
 </body>
 </html>
