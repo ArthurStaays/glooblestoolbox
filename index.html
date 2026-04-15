@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>gloobles — team tools</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;1,300&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --black:#0e0e0e;--white:#fafaf8;--gray:#f2f1ee;--border:#e0ddd8;
+  --text2:#888580;--green:#25D366;--gd:#128C7E;--gt:#075E54;--gbg:#ECE5DD;
+  --mono:'DM Mono',monospace;--serif:'DM Serif Display',serif;
+  --bg:#ffffff;--bg2:#f5f4f0;--text:#1a1a1a;--radius:10px;--radius-sm:6px;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--mono);background:var(--white);color:var(--black);min-height:100vh;}
+
+/* NAV */
+nav{display:flex;align-items:center;justify-content:space-between;padding:1.1rem 2.5rem;border-bottom:0.5px solid var(--border);position:sticky;top:0;background:var(--white);z-index:200;}
+.nav-logo{font-family:var(--mono);font-size:15px;font-weight:400;letter-spacing:.02em;color:var(--black);text-decoration:none;cursor:pointer;}
+.nav-tag{font-size:11px;color:var(--text2);letter-spacing:.08em;}
+
+/* TABS */
+.tabs{display:flex;gap:0;border-bottom:0.5px solid var(--border);padding:0 2.5rem;background:var(--white);}
+.tab{font-family:var(--mono);font-size:12px;padding:10px 18px;cursor:pointer;color:var(--text2);border-bottom:2px solid transparent;margin-bottom:-0.5px;transition:all .15s;background:none;border-top:none;border-left:none;border-right:none;letter-spacing:.03em;}
+.tab:hover{color:var(--black);}
+.tab.active{color:var(--black);border-bottom-color:var(--black);}
+.tab-dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--green);margin-right:6px;vertical-align:middle;position:relative;top:-1px;}
+.tab-dot.off{background:var(--border);}
+
+/* VIEWS */
+.view{display:none;min-height:calc(100vh - 100px);}
+.view.active{display:block;}
+
+/* HOME */
+.hero{padding:4rem 2.5rem 3rem;border-bottom:0.5px solid var(--border);max-width:860px;}
+.hero-label{font-size:11px;color:var(--text2);letter-spacing:.1em;text-transform:lowercase;margin-bottom:1rem;}
+.hero h1{font-family:var(--serif);font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:400;font-style:italic;line-height:1.15;color:var(--black);margin-bottom:.9rem;}
+.hero p{font-size:12px;color:var(--text2);line-height:1.75;max-width:440px;}
+.section{padding:2.5rem 2.5rem;}
+.section-label{font-size:11px;color:var(--text2);letter-spacing:.1em;text-transform:lowercase;margin-bottom:1.5rem;display:flex;align-items:center;gap:12px;}
+.section-label::after{content:'';flex:1;height:0.5px;background:var(--border);}
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1px;border:0.5px solid var(--border);border-radius:4px;overflow:hidden;background:var(--border);}
+.tool-card{background:var(--white);padding:1.5rem;cursor:pointer;transition:background .15s;display:block;position:relative;border:none;text-align:left;width:100%;font-family:var(--mono);}
+.tool-card:hover{background:var(--gray);}
+.tool-card.coming-soon{cursor:default;opacity:.5;}
+.tool-card.coming-soon:hover{background:var(--white);}
+.tool-tag{font-size:10px;letter-spacing:.1em;color:var(--text2);text-transform:lowercase;margin-bottom:.6rem;display:flex;align-items:center;gap:6px;}
+.tool-dot{width:5px;height:5px;border-radius:50%;background:var(--green);flex-shrink:0;}
+.tool-dot.off{background:var(--border);}
+.tool-name{font-family:var(--serif);font-size:1.15rem;font-style:italic;color:var(--black);margin-bottom:.4rem;line-height:1.2;}
+.tool-desc{font-size:11px;color:var(--text2);line-height:1.6;}
+.tool-arrow{position:absolute;bottom:1.5rem;right:1.5rem;font-size:13px;color:var(--border);transition:color .15s,transform .15s;}
+.tool-card:not(.coming-soon):hover .tool-arrow{color:var(--gd);transform:translate(2px,-2px);}
+.soon-badge{position:absolute;top:1.5rem;right:1.5rem;font-size:9px;letter-spacing:.08em;color:var(--text2);border:0.5px solid var(--border);border-radius:2px;padding:2px 6px;text-transform:lowercase;}
+
+/* OFFER BUILDER */
+.ob-wrap{padding:1.5rem 2.5rem;}
+.ob-title{font-size:13px;font-weight:500;color:var(--gt);margin-bottom:1.25rem;letter-spacing:.01em;}
+.app{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:1200px;}
+.panel{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius);padding:1.25rem;}
+.ptitle{font-size:11px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.07em;margin-bottom:1rem;}
+.sec{margin-bottom:1rem;}
+.lbl{font-size:12px;color:var(--text2);margin-bottom:5px;}
+input[type=text],input[type=number],textarea{width:100%;padding:7px 10px;font-size:13px;border:0.5px solid #ccc;border-radius:var(--radius-sm);background:#fff;color:var(--text);font-family:inherit;}
+input:focus,textarea:focus{outline:none;border-color:var(--gd);}
+textarea{resize:vertical;min-height:52px;}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.hotel-block{border:0.5px solid var(--border);border-radius:var(--radius-sm);margin-bottom:8px;overflow:hidden;}
+.hotel-hdr{background:var(--bg2);padding:7px 10px;display:flex;align-items:center;gap:6px;position:relative;}
+.hotel-hdr input{background:transparent;border:none;font-size:13px;font-weight:500;color:var(--text);flex:1;padding:0;}
+.hotel-hdr input:focus{outline:none;border-bottom:1px solid #ccc;}
+.hotel-body{padding:8px 10px;}
+.col-hds{display:grid;grid-template-columns:1fr 75px 20px;gap:5px;margin-bottom:3px;}
+.col-h{font-size:10px;color:var(--text2);}
+.room-row{display:grid;grid-template-columns:1fr 75px 20px;gap:5px;align-items:center;margin-bottom:5px;}
+.room-row input{font-size:12px;padding:4px 7px;}
+.delbtn{background:none;border:none;color:var(--text2);cursor:pointer;font-size:15px;line-height:1;padding:0;}
+.delbtn:hover{color:#e24b4a;}
+.add-room{width:100%;padding:4px;font-size:11px;background:none;border:0.5px dashed var(--green);border-radius:4px;color:var(--gd);cursor:pointer;margin-top:2px;}
+.add-room:hover{background:#e9f9f1;}
+.add-hotel{display:block;width:100%;padding:7px;font-size:12px;background:none;border:0.5px dashed #ccc;border-radius:var(--radius-sm);color:var(--text2);cursor:pointer;margin-top:4px;}
+.add-hotel:hover{background:var(--bg2);}
+.cal-wrap{position:relative;}
+.cal-wrap input{padding-right:26px;cursor:pointer;}
+.cal-ico{position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:13px;pointer-events:none;}
+.cal-pop{display:none;position:absolute;top:32px;left:0;z-index:200;background:#fff;border:0.5px solid #ccc;border-radius:var(--radius-sm);padding:8px;box-shadow:0 4px 14px rgba(0,0,0,.12);min-width:230px;}
+.cal-pop.open{display:block;}
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+.cal-nav button{background:none;border:none;cursor:pointer;font-size:15px;color:var(--text2);padding:2px 5px;}
+.cal-nav span{font-size:12px;font-weight:500;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;}
+.cdn{font-size:9px;color:var(--text2);text-align:center;padding:2px 0;}
+.cd{font-size:11px;text-align:center;padding:4px 2px;border-radius:3px;cursor:pointer;color:var(--text);}
+.cd:hover{background:var(--bg2);}
+.cd.sel{background:var(--green);color:white;}
+.cd.td{font-weight:500;color:var(--gd);}
+.cd.em{cursor:default;}
+.gen-btn{width:100%;padding:10px;font-size:14px;font-weight:500;background:var(--green);color:white;border:none;border-radius:var(--radius-sm);cursor:pointer;margin-top:4px;}
+.gen-btn:hover{background:var(--gd);}
+.wa-phone{background:var(--gbg);border-radius:10px;overflow:hidden;margin-bottom:10px;}
+.wa-top{background:var(--gt);color:white;padding:9px 12px;font-size:13px;font-weight:500;display:flex;align-items:center;gap:8px;}
+.wa-av{width:26px;height:26px;border-radius:50%;background:#A8D5CC;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:var(--gt);flex-shrink:0;}
+.wa-msgs{padding:10px;max-height:520px;overflow-y:auto;}
+.wa-bubble{background:white;border-radius:0 10px 10px 10px;padding:9px 12px;font-size:13px;line-height:1.55;color:#111;white-space:pre-wrap;box-shadow:0 1px 2px rgba(0,0,0,.1);position:relative;margin-bottom:4px;}
+.wa-bubble::before{content:'';position:absolute;left:-6px;top:0;border:6px solid transparent;border-right-color:white;border-top:none;}
+.wa-time{font-size:10px;color:#9E9E9E;text-align:right;margin-top:4px;}
+.copy-btn{width:100%;padding:8px;font-size:13px;background:var(--bg2);color:var(--text);border:0.5px solid #ccc;border-radius:var(--radius-sm);cursor:pointer;}
+.copy-btn:hover{background:#eceae4;}
+.empty-state{text-align:center;font-size:12px;color:#9E9E9E;padding:30px 0;}
+.toggle-group{display:flex;gap:6px;margin-bottom:10px;}
+.tog-btn{flex:1;padding:6px 10px;font-size:12px;font-weight:500;border:0.5px solid #ccc;border-radius:var(--radius-sm);background:#fff;color:var(--text2);cursor:pointer;transition:all .15s;}
+.tog-btn.active{background:var(--gd);color:white;border-color:var(--gd);}
+.cxl-global{display:none;}
+.cxl-global.show{display:block;}
+.cxl-per{display:none;}
+.cxl-per.show{display:block;}
+.cxl-hotel-row{display:flex;align-items:center;gap:8px;margin-bottom:7px;}
+.cxl-hotel-name{font-size:12px;font-weight:500;color:var(--text);min-width:110px;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.cxl-hotel-row textarea{min-height:36px;font-size:12px;padding:5px 8px;}
+
+/* FOOTER */
+footer{border-top:0.5px solid var(--border);padding:1.25rem 2.5rem;display:flex;align-items:center;justify-content:space-between;}
+footer span{font-size:11px;color:var(--text2);}
+</style>
+</head>
+<body>
+
+<nav>
+  <span class="nav-logo" onclick="showView('home')">gloobles.com</span>
+  <span class="nav-tag">internal tools</span>
+</nav>
+
+<div class="tabs">
+  <button class="tab active" onclick="showView('home')">home</button>
+  <button class="tab" id="tab-offer" onclick="showView('offer')"><span class="tab-dot"></span>offer builder</button>
+  <button class="tab" id="tab-email" onclick="showView('home')"><span class="tab-dot off"></span>email templates</button>
+  <button class="tab" id="tab-price" onclick="showView('home')"><span class="tab-dot off"></span>price calculator</button>
+</div>
+
+<!-- HOME VIEW -->
+<div class="view active" id="view-home">
+  <div class="hero">
+    <div class="hero-label">team workspace</div>
+    <h1>tools built<br/>for the gloobles team</h1>
+    <p>a curated set of internal tools to help you work faster, communicate better, and deliver exceptional experiences to every client.</p>
+  </div>
+  <div class="section">
+    <div class="section-label">client & sales tools</div>
+    <div class="tools-grid">
+      <button class="tool-card" onclick="showView('offer')">
+        <div class="tool-tag"><span class="tool-dot"></span>active</div>
+        <div class="tool-name">offer builder</div>
+        <div class="tool-desc">generate personalised whatsapp offers with hotel options, pricing, vip perks and cancellation policies in seconds.</div>
+        <span class="tool-arrow">↗</span>
+      </button>
+      <div class="tool-card coming-soon">
+        <div class="tool-tag"><span class="tool-dot off"></span>coming soon</div>
+        <div class="tool-name">email templates</div>
+        <div class="tool-desc">pre-built client email templates for confirmations, follow-ups, and special requests.</div>
+        <span class="soon-badge">soon</span>
+      </div>
+      <div class="tool-card coming-soon">
+        <div class="tool-tag"><span class="tool-dot off"></span>coming soon</div>
+        <div class="tool-name">price calculator</div>
+        <div class="tool-desc">quickly calculate trip totals, per-night rates, and package pricing across multiple properties.</div>
+        <span class="soon-badge">soon</span>
+      </div>
+    </div>
+  </div>
+  <div class="section" style="padding-top:0">
+    <div class="section-label">operations</div>
+    <div class="tools-grid">
+      <div class="tool-card coming-soon">
+        <div class="tool-tag"><span class="tool-dot off"></span>coming soon</div>
+        <div class="tool-name">client checklist</div>
+        <div class="tool-desc">track every step of a booking from first contact to post-trip follow-up.</div>
+        <span class="soon-badge">soon</span>
+      </div>
+      <div class="tool-card coming-soon">
+        <div class="tool-tag"><span class="tool-dot off"></span>coming soon</div>
+        <div class="tool-name">itinerary builder</div>
+        <div class="tool-desc">build day-by-day travel itineraries ready to share with clients.</div>
+        <span class="soon-badge">soon</span>
+      </div>
+      <div class="tool-card coming-soon">
+        <div class="tool-tag"><span class="tool-dot off"></span>coming soon</div>
+        <div class="tool-name">supplier contacts</div>
+        <div class="tool-desc">centralised directory of hotel contacts, dmc partners, and preferred suppliers worldwide.</div>
+        <span class="soon-badge">soon</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- OFFER BUILDER VIEW -->
+<div class="view" id="view-offer">
+  <div class="ob-wrap">
+    <div class="app">
+      <div class="panel">
+        <div class="ptitle">Offer details</div>
+        <div class="sec">
+          <div class="lbl">Client name</div>
+          <input type="text" id="client" placeholder="Richard" />
+        </div>
+        <div class="sec">
+          <div class="lbl">Opening line (personalised)</div>
+          <textarea id="opener" placeholder="I hope you're well, happy Easter!"></textarea>
+        </div>
+        <div class="sec">
+          <div class="lbl">Destination &amp; duration</div>
+          <div style="display:grid;grid-template-columns:2fr 1fr;gap:8px">
+            <div>
+              <div class="lbl">Destination</div>
+              <input type="text" id="dest" placeholder="Paris" />
+            </div>
+            <div>
+              <div class="lbl">Nights</div>
+              <input type="number" id="nights" placeholder="2" min="1" value="2" />
+            </div>
+          </div>
+        </div>
+        <div class="sec">
+          <div class="lbl">Travel dates</div>
+          <div class="row2">
+            <div class="cal-wrap">
+              <input type="text" id="d-in" placeholder="Check-in" readonly onclick="tc('ci')" />
+              <span class="cal-ico">📅</span>
+              <div class="cal-pop" id="ci"></div>
+            </div>
+            <div class="cal-wrap">
+              <input type="text" id="d-out" placeholder="Check-out" readonly onclick="tc('co')" />
+              <span class="cal-ico">📅</span>
+              <div class="cal-pop" id="co"></div>
+            </div>
+          </div>
+        </div>
+        <div class="sec">
+          <div class="lbl">Price display</div>
+          <div class="toggle-group">
+            <button class="tog-btn active" id="price-tog-total" onclick="setPriceMode('total')">Total stay</button>
+            <button class="tog-btn" id="price-tog-night" onclick="setPriceMode('night')">Per night</button>
+          </div>
+        </div>
+        <div class="sec">
+          <div class="lbl">Hotels &amp; options</div>
+          <div id="hotels"></div>
+          <button class="add-hotel" onclick="addHotel()">+ Add hotel</button>
+        </div>
+        <div class="sec">
+          <div class="lbl">Cancellation policy</div>
+          <div class="toggle-group">
+            <button class="tog-btn active" id="cxl-tog-all" onclick="setCxlMode('all')">Same for all hotels</button>
+            <button class="tog-btn" id="cxl-tog-per" onclick="setCxlMode('per')">One per hotel</button>
+          </div>
+          <div class="cxl-global show" id="cxl-global">
+            <textarea id="cxl-all-text" placeholder="e.g. Free cancellation up to 7 days before check-in"></textarea>
+          </div>
+          <div class="cxl-per" id="cxl-per">
+            <div id="cxl-per-list"></div>
+          </div>
+        </div>
+        <div class="sec">
+          <div class="lbl">Signature</div>
+          <input type="text" id="agent" placeholder="The gloobles Team" />
+        </div>
+        <button class="gen-btn" onclick="gen()">Generate WhatsApp message</button>
+      </div>
+
+      <div class="panel" style="display:flex;flex-direction:column;gap:10px">
+        <div class="ptitle">WhatsApp preview</div>
+        <div class="wa-phone">
+          <div class="wa-top">
+            <div class="wa-av">GL</div>
+            <span>gloobles</span>
+          </div>
+          <div class="wa-msgs" id="preview">
+            <div class="empty-state">Fill the form and click Generate</div>
+          </div>
+        </div>
+        <button class="copy-btn" id="copybtn" style="display:none" onclick="copyIt()">Copy message</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span>gloobles.com — internal use only</span>
+  <span>Amsterdam</span>
+</footer>
+
+<script>
+// --- VIEW SWITCHING ---
+function showView(name){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('view-'+name).classList.add('active');
+  const tabMap={home:0,offer:1};
+  if(tabMap[name]!==undefined) document.querySelectorAll('.tab')[tabMap[name]].classList.add('active');
+}
+
+// --- CALENDAR ---
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const MSHORT=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const DNAMES=['Su','Mo','Tu','We','Th','Fr','Sa'];
+let cals={ci:{y:2026,m:3},co:{y:2026,m:3}};
+let picked={ci:null,co:null};
+let inp={ci:'d-in',co:'d-out'};
+
+function tc(id){
+  const pop=document.getElementById(id);
+  const was=pop.classList.contains('open');
+  document.querySelectorAll('.cal-pop').forEach(p=>p.classList.remove('open'));
+  if(!was){rc(id);pop.classList.add('open');}
+}
+function rc(id){
+  const{y,m}=cals[id];
+  const first=new Date(y,m,1).getDay();
+  const dim=new Date(y,m+1,0).getDate();
+  const td=new Date();
+  const s=picked[id];
+  let h=`<div class="cal-nav"><button onclick="cn('${id}',-1)">‹</button><span>${MONTHS[m]} ${y}</span><button onclick="cn('${id}',1)">›</button></div><div class="cal-grid">`;
+  DNAMES.forEach(d=>h+=`<div class="cdn">${d}</div>`);
+  for(let i=0;i<first;i++)h+=`<div class="cd em"></div>`;
+  for(let d=1;d<=dim;d++){
+    const it=d===td.getDate()&&m===td.getMonth()&&y===td.getFullYear();
+    const is=s&&s.d===d&&s.m===m&&s.y===y;
+    h+=`<div class="cd${it?' td':''}${is?' sel':''}" onclick="pd('${id}',${y},${m},${d})">${d}</div>`;
+  }
+  h+=`</div>`;
+  document.getElementById(id).innerHTML=h;
+}
+function cn(id,dir){
+  let{y,m}=cals[id];m+=dir;
+  if(m<0){m=11;y--;}if(m>11){m=0;y++;}
+  cals[id]={y,m};rc(id);
+}
+function pd(id,y,m,d){
+  picked[id]={y,m,d};
+  document.getElementById(inp[id]).value=`${d} ${MSHORT[m]}`;
+  document.getElementById(id).classList.remove('open');
+  if(id==='ci'){cals.co={y,m};rc('co');}
+}
+document.addEventListener('click',e=>{
+  if(!e.target.closest('.cal-wrap'))document.querySelectorAll('.cal-pop').forEach(p=>p.classList.remove('open'));
+  hotels.forEach(h=>{if(!e.target.closest('#hdr-'+h.id))closeSug(h.id);});
+});
+
+// --- HOTELS ---
+let hc=0,hotels=[],cxlMode='all',priceMode='total';
+
+function setPriceMode(mode){
+  priceMode=mode;
+  document.getElementById('price-tog-total').classList.toggle('active',mode==='total');
+  document.getElementById('price-tog-night').classList.toggle('active',mode==='night');
+}
+function setCxlMode(mode){
+  cxlMode=mode;
+  document.getElementById('cxl-tog-all').classList.toggle('active',mode==='all');
+  document.getElementById('cxl-tog-per').classList.toggle('active',mode==='per');
+  document.getElementById('cxl-global').classList.toggle('show',mode==='all');
+  document.getElementById('cxl-per').classList.toggle('show',mode==='per');
+  if(mode==='per')renderCxlPer();
+}
+function renderCxlPer(){
+  const c=document.getElementById('cxl-per-list');
+  if(!c)return;
+  c.innerHTML=hotels.map(h=>`<div class="cxl-hotel-row"><span class="cxl-hotel-name" title="${h.name||'Hotel'}">${h.name||'Hotel'}</span><textarea placeholder="Cancellation policy..." oninput="sh(${h.id},'cxl',this.value)">${h.cxl||''}</textarea></div>`).join('')||'<div style="font-size:12px;color:var(--text2)">Add hotels above first</div>';
+}
+function addHotel(){
+  const id=hc++;
+  hotels.push({id,name:'',rooms:[],note:'',cxl:''});
+  rh();addRoom(id);
+  if(cxlMode==='per')renderCxlPer();
+}
+function delHotel(id){hotels=hotels.filter(h=>h.id!==id);rh();if(cxlMode==='per')renderCxlPer();}
+function addRoom(hid){const h=hotels.find(h=>h.id===hid);if(h)h.rooms.push({name:'',price:''});rh();}
+function delRoom(hid,ri){const h=hotels.find(h=>h.id===hid);if(h)h.rooms.splice(ri,1);rh();}
+function sh(id,f,v){const h=hotels.find(h=>h.id===id);if(h){h[f]=v;if(f==='name'&&cxlMode==='per')renderCxlPer();}}
+function sr(hid,ri,f,v){const h=hotels.find(h=>h.id===hid);if(h&&h.rooms[ri])h.rooms[ri][f]=v;}
+
+function rh(){
+  document.getElementById('hotels').innerHTML=hotels.map(h=>`
+    <div class="hotel-block">
+      <div class="hotel-hdr" id="hdr-${h.id}">
+        <input type="text" placeholder="Hotel name" value="${h.name}" oninput="sh(${h.id},'name',this.value)" autocomplete="off"/>
+        <button class="delbtn" onclick="delHotel(${h.id})">×</button>
+      </div>
+      <div class="hotel-body">
+        <div class="col-hds"><span class="col-h">Room / option name</span><span class="col-h">Price (€)</span><span></span></div>
+        ${h.rooms.map((r,ri)=>`<div class="room-row">
+          <input type="text" placeholder="Deluxe room" value="${r.name}" oninput="sr(${h.id},${ri},'name',this.value)"/>
+          <input type="number" placeholder="2032" value="${r.price}" oninput="sr(${h.id},${ri},'price',this.value)"/>
+          <button class="delbtn" onclick="delRoom(${h.id},${ri})">×</button>
+        </div>`).join('')}
+        <button class="add-room" onclick="addRoom(${h.id})">+ room option</button>
+        <textarea placeholder="Add a note / comment..." style="margin-top:8px;font-size:12px;min-height:44px;width:100%;padding:5px 8px;border:0.5px solid #ccc;border-radius:4px;font-family:inherit;color:var(--text);background:#fff;resize:vertical" oninput="sh(${h.id},'note',this.value)">${h.note||''}</textarea>
+      </div>
+    </div>`).join('');
+}
+
+// Autocomplete stubs (disabled — no API key)
+function closeSug(hid){}
+
+// Pre-fill
+addHotel();
+document.getElementById('client').value='Richard';
+document.getElementById('opener').value="I hope you're well, happy Easter!";
+document.getElementById('dest').value='Paris';
+document.getElementById('nights').value='2';
+document.getElementById('agent').value='The gloobles Team';
+pd('ci',2026,3,16);
+pd('co',2026,3,18);
+hotels[0].name='Le Bristol Paris';
+hotels[0].rooms[0].name='Chambre Supérieure';
+hotels[0].rooms[0].price='2308';
+hotels[0].note='Breakfast included';
+hotels[0].cxl='Free cancellation up to 7 days before check-in';
+hotels[0].rooms.push({name:'Suite Royale',price:'4800'});
+addHotel();
+hotels[1].name='Maison Barrière Vendôme';
+hotels[1].rooms[0].name='Chambre Deluxe';
+hotels[1].rooms[0].price='1666';
+hotels[1].note='';
+hotels[1].cxl='Non-refundable';
+hotels[1].rooms.push({name:'Suite Prestige',price:'2900'});
+rh();
+
+// --- MESSAGE GEN ---
+function fmtDateRange(){
+  const ci=picked.ci,co=picked.co;
+  if(!ci&&!co)return'';
+  if(ci&&co){if(ci.m===co.m)return`${MSHORT[ci.m]} ${ci.d}–${co.d}`;return`${MSHORT[ci.m]} ${ci.d} – ${MSHORT[co.m]} ${co.d}`;}
+  if(ci)return`${MSHORT[ci.m]} ${ci.d}`;
+  return`${MSHORT[co.m]} ${co.d}`;
+}
+
+let lastMsg='';
+function gen(){
+  const client=document.getElementById('client').value.trim()||'there';
+  const dest=document.getElementById('dest').value.trim()||'your destination';
+  const nights=document.getElementById('nights').value||'2';
+  const opener=document.getElementById('opener').value.trim();
+  const agent=document.getElementById('agent').value.trim()||'The gloobles Team';
+  const dateRange=fmtDateRange();
+  const nightWord=nights==='1'?'night':'nights';
+  let hotelLines='';
+  hotels.forEach(h=>{
+    const name=h.name||'Hotel';
+    hotelLines+=`\n*${name}*\n`;
+    h.rooms.forEach(r=>{
+      const rname=r.name?`${r.name}: `:'';
+      let price='';
+      if(r.price){
+        const total=Number(r.price);
+        if(priceMode==='total'){price=`€${total.toLocaleString('fr-FR',{maximumFractionDigits:0})} for ${nights} ${nightWord}`;}
+        else{price=`€${total.toLocaleString('fr-FR',{maximumFractionDigits:0})} per night`;}
+      }
+      hotelLines+=`• ${rname}${price}\n`;
+    });
+    if(h.note&&h.note.trim())hotelLines+=`_${h.note.trim()}_\n`;
+    if(cxlMode==='per'&&h.cxl&&h.cxl.trim())hotelLines+=`_Cancellation: ${h.cxl.trim()}_\n`;
+  });
+  if(!hotelLines.trim())hotelLines='\n• (no hotels added)\n';
+  const cxlAllText=document.getElementById('cxl-all-text').value.trim();
+  const cxlBlock=(cxlMode==='all'&&cxlAllText)?`\n*Cancellation policy*\n${cxlAllText}\n`:'';
+  const intro=opener?`${opener}\n\n`:'';
+  const datePart=dateRange?`, *${dateRange}*`:'';
+  const msg=`Dear ${client},\n\n${intro}I'm pleased to share some options for your ${nights} ${nightWord} in *${dest}*${datePart}. Thank you so much for trusting me with this request.\n${hotelLines}${cxlBlock}\nAt gloobles, we always work hard to ensure you have the very best experience wherever you go. To us, you really are a VIP.\n\nCurious what that looks like?\n• A delicious daily breakfast, on the house.\n• A room upgrade, whenever we can swing it.\n• Check-in and check-out at times that suit you.\n• Some extra spending credit.\n• Special welcome present & note.\n\nDo let us know your thoughts at your soonest convenience and don't hesitate if you have any questions. We look forward to hearing from you!\n\nWarm regards,\n${agent}`;
+  lastMsg=msg;
+  const now=new Date();
+  const t=`${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+  document.getElementById('preview').innerHTML=`<div class="wa-bubble">${fmtWa(msg)}<div class="wa-time">${t} ✓✓</div></div>`;
+  document.getElementById('copybtn').style.display='block';
+}
+function fmtWa(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/\*([^*]+)\*/g,'<strong>$1</strong>')
+    .replace(/_([^_]+)_/g,'<em>$1</em>')
+    .replace(/\n/g,'<br>');
+}
+function copyIt(){
+  if(!lastMsg)return;
+  navigator.clipboard.writeText(lastMsg).then(()=>{
+    const b=document.getElementById('copybtn');
+    b.textContent='Copied ✓';
+    setTimeout(()=>b.textContent='Copy message',2000);
+  });
+}
+</script>
+</body>
+</html>
