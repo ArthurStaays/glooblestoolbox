@@ -126,6 +126,17 @@ textarea{resize:vertical;min-height:52px;}
 .view-nav-btn:hover{color:var(--black);border-color:var(--black);}
 .view-nav-btn svg{width:11px;height:11px;flex-shrink:0;}
 
+/* INVOICE GENERATOR */
+.inv-item-hdr{display:grid;grid-template-columns:1fr 48px 88px 78px 20px;gap:6px;margin-bottom:4px;}
+.inv-item-row{display:grid;grid-template-columns:1fr 48px 88px 78px 20px;gap:6px;align-items:center;margin-bottom:5px;}
+.inv-from-box{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;font-size:11px;color:var(--text2);line-height:1.8;}
+.inv-from-box strong{color:var(--black);font-size:12px;display:block;margin-bottom:1px;}
+.inv-amt-cell{font-size:12px;padding:5px 8px;background:var(--bg2);border-radius:var(--radius-sm);text-align:right;white-space:nowrap;}
+.inv-totals{background:var(--bg2);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:16px;}
+.inv-total-row{display:flex;justify-content:space-between;font-size:12px;padding:2px 0;}
+.inv-total-row.grand{font-weight:600;font-size:14px;border-top:0.5px solid var(--border);margin-top:6px;padding-top:8px;}
+.inv-preview-wrap{background:#fff;border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:24px;flex:1;overflow-y:auto;font-size:10px;line-height:1.7;min-height:460px;}
+
 /* FOOTER */
 footer{border-top:0.5px solid var(--border);padding:1.25rem 2.5rem;display:flex;align-items:center;justify-content:space-between;}
 footer span{font-size:11px;color:var(--text2);}
@@ -144,6 +155,7 @@ footer span{font-size:11px;color:var(--text2);}
   <button class="tab" id="tab-price" onclick="showView('price')"><span class="tab-dot"></span>price calculator</button>
   <button class="tab" id="tab-confirm" onclick="showView('confirm')"><span class="tab-dot"></span>booking confirmation</button>
   <button class="tab" id="tab-email" onclick="showView('home')"><span class="tab-dot off"></span>email templates</button>
+  <button class="tab" id="tab-invoice" onclick="showView('invoice')"><span class="tab-dot"></span>invoice generator</button>
 </div>
 
 <!-- HOME VIEW -->
@@ -160,6 +172,12 @@ footer span{font-size:11px;color:var(--text2);}
         <div class="tool-tag"><span class="tool-dot"></span>active</div>
         <div class="tool-name">offer builder</div>
         <div class="tool-desc">generate personalised whatsapp offers with hotel options, pricing, vip perks and cancellation policies in seconds.</div>
+        <span class="tool-arrow">↗</span>
+      </button>
+      <button class="tool-card" onclick="showView('invoice')">
+        <div class="tool-tag"><span class="tool-dot"></span>active</div>
+        <div class="tool-name">invoice generator</div>
+        <div class="tool-desc">generate a clean, branded PDF invoice to send to your clients in seconds — from €0 to ready-to-send.</div>
         <span class="tool-arrow">↗</span>
       </button>
       <div class="tool-card coming-soon">
@@ -558,6 +576,107 @@ footer span{font-size:11px;color:var(--text2);}
   </div>
 </div>
 
+<!-- INVOICE GENERATOR VIEW -->
+<div class="view" id="view-invoice">
+  <div class="ob-wrap">
+    <div class="view-nav">
+      <button class="view-nav-btn" onclick="goBack()"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M7.5 2L3.5 6l4 4"/></svg>précédent</button>
+      <button class="view-nav-btn" onclick="showView('home')"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1.5 5.5L6 1.5l4.5 4M2.5 4.5V10.5h2.5V7.5h2V10.5h2.5V4.5"/></svg>accueil</button>
+    </div>
+    <div style="font-family:'DM Mono',monospace;font-size:15px;font-weight:400;color:#0e0e0e;letter-spacing:.02em;margin-bottom:1.25rem;">gloobles</div>
+    <div class="app">
+
+      <!-- LEFT: FORM -->
+      <div class="panel">
+        <div class="ptitle">Invoice details</div>
+
+        <div class="sec">
+          <div class="row2">
+            <div>
+              <div class="lbl">Invoice number</div>
+              <input type="text" id="inv-num" placeholder="gloobles-416" />
+            </div>
+            <div></div>
+          </div>
+        </div>
+        <div class="sec">
+          <div class="row2">
+            <div>
+              <div class="lbl">Date of issue</div>
+              <input type="date" id="inv-date-issue" />
+            </div>
+            <div>
+              <div class="lbl">Date due</div>
+              <input type="date" id="inv-date-due" />
+            </div>
+          </div>
+        </div>
+
+        <div class="sec">
+          <div class="lbl">From</div>
+          <div class="inv-from-box">
+            <strong>gloobles b.v.</strong>
+            Prinsengracht 821 — 1015 DZ Amsterdam<br/>Netherlands — finance@gloobles.com
+          </div>
+        </div>
+
+        <div class="sec">
+          <div class="lbl">Bill to</div>
+          <input type="text" id="inv-company" placeholder="Company name" style="margin-bottom:6px;" oninput="invLivePreview()" />
+          <input type="text" id="inv-addr1" placeholder="Address line 1" style="margin-bottom:6px;" oninput="invLivePreview()" />
+          <input type="text" id="inv-addr2" placeholder="City, Postal code" style="margin-bottom:6px;" oninput="invLivePreview()" />
+          <input type="text" id="inv-country" placeholder="Country" style="margin-bottom:6px;" oninput="invLivePreview()" />
+          <input type="text" id="inv-contact" placeholder="Contact name" style="margin-bottom:6px;" oninput="invLivePreview()" />
+          <input type="text" id="inv-email" placeholder="Contact email" oninput="invLivePreview()" />
+        </div>
+
+        <div class="sec">
+          <div class="lbl">Items</div>
+          <div class="inv-item-hdr">
+            <span style="font-size:10px;color:var(--text2);">Description</span>
+            <span style="font-size:10px;color:var(--text2);">Qty</span>
+            <span style="font-size:10px;color:var(--text2);">Unit price (€)</span>
+            <span style="font-size:10px;color:var(--text2);">Amount</span>
+            <span></span>
+          </div>
+          <div id="inv-items"></div>
+          <button class="add-room" onclick="addInvItem()" style="margin-top:4px;">+ Add item</button>
+        </div>
+
+        <div class="sec">
+          <div class="row2">
+            <div>
+              <div class="lbl">Tax label</div>
+              <input type="text" id="inv-tax-label" placeholder="Local tax" oninput="calcInvTotal()" />
+            </div>
+            <div>
+              <div class="lbl">Tax amount (€)</div>
+              <input type="number" id="inv-tax-amount" placeholder="0" step="0.01" oninput="calcInvTotal()" />
+            </div>
+          </div>
+        </div>
+
+        <div class="inv-totals">
+          <div class="inv-total-row"><span style="color:var(--text2);">Subtotal</span><span id="inv-subtotal">€ 0,00</span></div>
+          <div class="inv-total-row"><span style="color:var(--text2);" id="inv-tax-label-disp">Tax</span><span id="inv-tax-disp">€ 0,00</span></div>
+          <div class="inv-total-row grand"><span>Total</span><span id="inv-total-disp">€ 0,00</span></div>
+        </div>
+
+        <button class="gen-btn" onclick="generateInvoicePDF()">Generate Invoice PDF</button>
+      </div>
+
+      <!-- RIGHT: PREVIEW -->
+      <div class="panel" style="display:flex;flex-direction:column;gap:10px;">
+        <div class="ptitle">Invoice preview</div>
+        <div class="inv-preview-wrap" id="inv-preview">
+          <div style="text-align:center;font-size:12px;color:#9E9E9E;padding:60px 0;">Fill the form and click Generate Invoice PDF</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 <footer>
   <span>gloobles.com — internal use only</span>
   <span>Amsterdam</span>
@@ -565,7 +684,7 @@ footer span{font-size:11px;color:var(--text2);}
 
 <script>
 // --- VIEW SWITCHING ---
-const tabMap={home:0,offer:1,price:2,confirm:3};
+const tabMap={home:0,offer:1,price:2,confirm:3,invoice:5};
 let navHistory=[];
 let currentView='home';
 function showView(name,fromBack=false){
@@ -1045,6 +1164,331 @@ function _doGeneratePDF(){
   const filename=`gloobles_confirmation_${guest.replace(/\s+/g,'_')}_x_${hotel.replace(/\s+/g,'_')}.pdf`;
   doc.save(filename);
 }
+
+// --- INVOICE GENERATOR ---
+let invItems=[];
+let invItemId=0;
+
+function initInvoice(){
+  const today=new Date();
+  const fmt=d=>d.toISOString().split('T')[0];
+  document.getElementById('inv-date-issue').value=fmt(today);
+  document.getElementById('inv-date-due').value=fmt(today);
+  const lastNum=parseInt(localStorage.getItem('gloobles_inv_num')||'415');
+  document.getElementById('inv-num').value='gloobles-'+(lastNum+1);
+  // Test data pre-fill
+  document.getElementById('inv-company').value='Artemis Enterprises LLC';
+  document.getElementById('inv-addr1').value='39 Upper Addison Gardens';
+  document.getElementById('inv-addr2').value='London W14 8AJ';
+  document.getElementById('inv-country').value='United Kingdom';
+  document.getElementById('inv-contact').value='Tucker Drew';
+  document.getElementById('inv-email').value='tdrew@levygoryvdayan.com';
+  document.getElementById('inv-tax-label').value='Local tax';
+  document.getElementById('inv-tax-amount').value='32';
+  if(invItems.length===0){
+    const id=invItemId++;
+    invItems.push({id,desc:'Travel Expenses for Mrs Victoria Gelfand-Magalhaes',qty:1,price:2480});
+    renderInvItems();
+  }
+  calcInvTotal();
+}
+
+function addInvItem(){
+  const id=invItemId++;
+  invItems.push({id,desc:'',qty:1,price:0});
+  renderInvItems();
+}
+
+function removeInvItem(id){
+  invItems=invItems.filter(i=>i.id!==id);
+  renderInvItems();
+  calcInvTotal();
+}
+
+function renderInvItems(){
+  const c=document.getElementById('inv-items');
+  c.innerHTML=invItems.map(item=>`
+    <div class="inv-item-row">
+      <input type="text" placeholder="Description" value="${item.desc.replace(/"/g,'&quot;')}"
+        oninput="invItems.find(i=>i.id===${item.id}).desc=this.value;invLivePreview()"
+        style="font-size:12px;padding:5px 8px;"/>
+      <input type="number" placeholder="1" value="${item.qty||''}" min="1"
+        oninput="invItems.find(i=>i.id===${item.id}).qty=parseFloat(this.value)||0;calcInvTotal()"
+        style="font-size:12px;padding:5px 8px;"/>
+      <input type="number" placeholder="0,00" value="${item.price||''}" step="0.01"
+        oninput="invItems.find(i=>i.id===${item.id}).price=parseFloat(this.value)||0;calcInvTotal()"
+        style="font-size:12px;padding:5px 8px;"/>
+      <div class="inv-amt-cell" id="inv-item-amt-${item.id}">€ 0,00</div>
+      <button class="delbtn" onclick="removeInvItem(${item.id})">×</button>
+    </div>
+  `).join('');
+  calcInvTotal();
+}
+
+function calcInvTotal(){
+  let sub=0;
+  invItems.forEach(item=>{
+    const amt=(item.qty||0)*(item.price||0);
+    sub+=amt;
+    const el=document.getElementById('inv-item-amt-'+item.id);
+    if(el)el.textContent=invFmtEur(amt);
+  });
+  const tax=parseFloat(document.getElementById('inv-tax-amount').value)||0;
+  const total=sub+tax;
+  document.getElementById('inv-subtotal').textContent=invFmtEur(sub);
+  document.getElementById('inv-tax-disp').textContent=invFmtEur(tax);
+  document.getElementById('inv-total-disp').textContent=invFmtEur(total);
+  const lbl=document.getElementById('inv-tax-label').value||'Tax';
+  document.getElementById('inv-tax-label-disp').textContent=lbl;
+  invLivePreview();
+}
+
+function invFmtEur(n){
+  return '€\u00a0'+n.toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+function invFmtEurPdf(n){
+  if(isNaN(n)||n===null)return'EUR 0,00';
+  const abs=Math.abs(n);
+  const int=Math.floor(abs);
+  const dec=Math.round((abs-int)*100).toString().padStart(2,'0');
+  const intStr=int.toString().replace(/\B(?=(\d{3})+(?!\d))/g,' ');
+  return(n<0?'-':'')+'EUR '+intStr+','+dec;
+}
+
+function invFmtDate(str){
+  if(!str)return'—';
+  const[y,m,d]=str.split('-').map(Number);
+  return`${d}-${m}-${y}`;
+}
+
+function invLivePreview(){
+  const invNum=document.getElementById('inv-num').value||'—';
+  const issueDate=invFmtDate(document.getElementById('inv-date-issue').value);
+  const dueDate=invFmtDate(document.getElementById('inv-date-due').value);
+  const company=document.getElementById('inv-company').value.trim();
+  const addr1=document.getElementById('inv-addr1').value.trim();
+  const addr2=document.getElementById('inv-addr2').value.trim();
+  const country=document.getElementById('inv-country').value.trim();
+  const contact=document.getElementById('inv-contact').value.trim();
+  const email=document.getElementById('inv-email').value.trim();
+  const taxLabel=document.getElementById('inv-tax-label').value||'Tax';
+  const taxAmt=parseFloat(document.getElementById('inv-tax-amount').value)||0;
+
+  let sub=0;
+  let itemsHTML='';
+  invItems.forEach(item=>{
+    if(!item.desc&&!item.price)return;
+    const amt=(item.qty||0)*(item.price||0);
+    sub+=amt;
+    itemsHTML+=`<tr>
+      <td style="padding:5px 0;border-bottom:0.5px solid #f0ede8;font-size:10px;">${item.desc||'—'}</td>
+      <td style="padding:5px 6px;border-bottom:0.5px solid #f0ede8;text-align:center;font-size:10px;">${item.qty||1}</td>
+      <td style="padding:5px 0;border-bottom:0.5px solid #f0ede8;text-align:right;font-size:10px;">${invFmtEur(item.price||0)}</td>
+      <td style="padding:5px 0;border-bottom:0.5px solid #f0ede8;text-align:right;font-weight:600;font-size:10px;">${invFmtEur(amt)}</td>
+    </tr>`;
+  });
+  if(!itemsHTML)itemsHTML=`<tr><td colspan="4" style="color:#9e9e9e;padding:10px 0;font-size:10px;">No items added yet</td></tr>`;
+  const total=sub+taxAmt;
+
+  const billAddr=[addr1,addr2,country].filter(Boolean).join('<br/>');
+
+  document.getElementById('inv-preview').innerHTML=`
+    <div style="font-family:'DM Mono',monospace;">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;">
+        <div style="font-family:'DM Serif Display',serif;font-size:22px;font-style:italic;color:#0e0e0e;line-height:1;">gloobles</div>
+        <div style="text-align:right;font-size:10px;line-height:2;">
+          <div><span style="color:#888580;">Number&nbsp;&nbsp;</span><strong>${invNum}</strong></div>
+          <div><span style="color:#888580;">Date of issue&nbsp;&nbsp;</span>${issueDate}</div>
+          <div><span style="color:#888580;">Date due&nbsp;&nbsp;</span>${dueDate}</div>
+        </div>
+      </div>
+      <div style="height:0.5px;background:#e0ddd8;margin-bottom:14px;"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:14px;">
+        <div>
+          <div style="font-size:8px;color:#888580;letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px;">From</div>
+          <div style="font-weight:600;font-size:11px;margin-bottom:3px;">gloobles b.v.</div>
+          <div style="color:#888580;line-height:1.8;font-size:10px;">Prinsengracht 821<br/>1015 DZ Amsterdam<br/>Netherlands<br/>finance@gloobles.com</div>
+        </div>
+        <div>
+          <div style="font-size:8px;color:#888580;letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px;">Bill to</div>
+          ${company?`<div style="font-weight:600;font-size:11px;margin-bottom:3px;">${company}</div>`:''}
+          ${billAddr?`<div style="color:#888580;line-height:1.8;font-size:10px;">${billAddr}</div>`:''}
+          ${contact||email?`<div style="margin-top:6px;font-size:10px;line-height:1.8;">${contact?`<span>${contact}</span><br/>`:''}${email?`<span style="color:#888580;">${email}</span>`:''}</div>`:''}
+        </div>
+      </div>
+      <div style="height:0.5px;background:#e0ddd8;margin-bottom:12px;"></div>
+      <table style="width:100%;border-collapse:collapse;">
+        <thead><tr style="color:#888580;">
+          <th style="text-align:left;padding-bottom:7px;font-weight:400;font-size:9px;text-transform:uppercase;letter-spacing:.06em;">Description</th>
+          <th style="text-align:center;padding-bottom:7px;font-weight:400;font-size:9px;text-transform:uppercase;letter-spacing:.06em;">Qty</th>
+          <th style="text-align:right;padding-bottom:7px;font-weight:400;font-size:9px;text-transform:uppercase;letter-spacing:.06em;">Unit price</th>
+          <th style="text-align:right;padding-bottom:7px;font-weight:400;font-size:9px;text-transform:uppercase;letter-spacing:.06em;">Amount</th>
+        </tr></thead>
+        <tbody>${itemsHTML}</tbody>
+      </table>
+      <div style="height:0.5px;background:#e0ddd8;margin:12px 0;"></div>
+      <div style="text-align:right;font-size:10px;line-height:2;">
+        <div style="display:flex;justify-content:flex-end;gap:28px;"><span style="color:#888580;">Subtotal</span><span style="min-width:80px;text-align:right;">${invFmtEur(sub)}</span></div>
+        <div style="display:flex;justify-content:flex-end;gap:28px;"><span style="color:#888580;">${taxLabel}</span><span style="min-width:80px;text-align:right;">${invFmtEur(taxAmt)}</span></div>
+        <div style="display:flex;justify-content:flex-end;gap:28px;font-weight:700;font-size:12px;border-top:0.5px solid #e0ddd8;margin-top:6px;padding-top:8px;"><span>Total</span><span style="min-width:80px;text-align:right;">${invFmtEur(total)}</span></div>
+      </div>
+      <div style="height:0.5px;background:#e0ddd8;margin:14px 0;"></div>
+      <div style="font-size:9px;color:#888580;line-height:1.8;">
+        <div style="margin-bottom:6px;">Please address the payment to gloobles BV using:</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div><strong style="color:#0e0e0e;display:block;margin-bottom:2px;">EUR account</strong>IBAN: NL67 ABNA 0825 6779 04<br/>BIC: ABNANL2A</div>
+          <div><strong style="color:#0e0e0e;display:block;margin-bottom:2px;">USD account</strong>IBAN: NL49 ABNA 0142 6111 15<br/>BIC: ABNANL2A</div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function generateInvoicePDF(){
+  invLivePreview();
+  if(!window.jspdf){
+    const s=document.createElement('script');
+    s.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+    s.onload=()=>_doInvoicePDF();
+    document.head.appendChild(s);
+  } else {
+    _doInvoicePDF();
+  }
+}
+
+function _doInvoicePDF(){
+  const{jsPDF}=window.jspdf;
+  const doc=new jsPDF({unit:'mm',format:'a4'});
+  const W=210,H=297,M=20;
+  const CW=W-2*M;
+  let y=M;
+  const BK=[14,14,14],GR=[136,133,128],BD=[220,221,216];
+  const mid=M+CW/2;
+
+  const hline=(yy,col=BD)=>{
+    doc.setDrawColor(...col);doc.setLineWidth(0.2);doc.line(M,yy,W-M,yy);
+  };
+
+  // --- HEADER ---
+  const invNum=document.getElementById('inv-num').value||'—';
+  const issueDate=invFmtDate(document.getElementById('inv-date-issue').value);
+  const dueDate=invFmtDate(document.getElementById('inv-date-due').value);
+
+  doc.setFont('times','bolditalic');doc.setFontSize(30);doc.setTextColor(...BK);
+  doc.text('gloobles',M,y+10);
+
+  doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(...GR);
+  doc.text('Number',W-M-52,y+2);
+  doc.text('Date of issue',W-M-52,y+7);
+  doc.text('Date due',W-M-52,y+12);
+  doc.setTextColor(...BK);doc.setFont('helvetica','bold');
+  doc.text(invNum,W-M,y+2,{align:'right'});
+  doc.setFont('helvetica','normal');
+  doc.text(issueDate,W-M,y+7,{align:'right'});
+  doc.text(dueDate,W-M,y+12,{align:'right'});
+
+  y+=26;hline(y);y+=8;
+
+  // --- FROM / BILL TO ---
+  doc.setFont('helvetica','bold');doc.setFontSize(7.5);doc.setTextColor(...GR);
+  doc.text('FROM',M,y);doc.text('BILL TO',mid,y);y+=5;
+  doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(...BK);
+  doc.text('gloobles b.v.',M,y);
+
+  const comp=document.getElementById('inv-company').value.trim();
+  if(comp){doc.text(comp,mid,y);}
+  y+=5;
+
+  const fromLines=['Prinsengracht 821','1015 DZ Amsterdam','Netherlands','finance@gloobles.com'];
+  const billLines=[
+    document.getElementById('inv-addr1').value.trim(),
+    document.getElementById('inv-addr2').value.trim(),
+    document.getElementById('inv-country').value.trim(),
+    '',
+    document.getElementById('inv-contact').value.trim(),
+    document.getElementById('inv-email').value.trim()
+  ];
+
+  doc.setFont('helvetica','normal');doc.setFontSize(9);
+  let fromY=y,billY=y;
+  fromLines.forEach(l=>{
+    if(l==='finance@gloobles.com')doc.setTextColor(...GR);else doc.setTextColor(...BK);
+    doc.text(l,M,fromY);fromY+=5;
+  });
+  billLines.forEach(l=>{
+    if(!l){billY+=3;return;}
+    doc.setTextColor(...BK);
+    doc.text(l,mid,billY);billY+=5;
+  });
+
+  y=Math.max(fromY,billY)+4;hline(y);y+=8;
+
+  // --- ITEMS TABLE ---
+  const dW=CW*0.54,qW=CW*0.09,uW=CW*0.185,aW=CW*0.185;
+  const cD=M,cQ=M+dW,cU=M+dW+qW,cA=M+dW+qW+uW;
+
+  doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(...GR);
+  doc.text('Description',cD,y);
+  doc.text('Qty',cQ+qW/2,y,{align:'center'});
+  doc.text('Unit price',cU+uW,y,{align:'right'});
+  doc.text('Amount',cA+aW,y,{align:'right'});
+  y+=2;hline(y);y+=6;
+
+  doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(...BK);
+  let sub=0;
+  invItems.forEach(item=>{
+    if(!item.desc&&!item.price)return;
+    const amt=(item.qty||0)*(item.price||0);sub+=amt;
+    const lines=doc.splitTextToSize(item.desc||'',dW-4);
+    doc.text(lines,cD,y);
+    doc.text(String(item.qty||1),cQ+qW/2,y,{align:'center'});
+    doc.text(invFmtEurPdf(item.price||0),cU+uW,y,{align:'right'});
+    doc.setFont('helvetica','bold');
+    doc.text(invFmtEurPdf(amt),cA+aW,y,{align:'right'});
+    doc.setFont('helvetica','normal');
+    y+=Math.max(lines.length,1)*5+3;
+  });
+
+  y+=2;hline(y);y+=8;
+
+  // --- TOTALS ---
+  const tax=parseFloat(document.getElementById('inv-tax-amount').value)||0;
+  const taxLabel=document.getElementById('inv-tax-label').value||'Local tax';
+  const total=sub+tax;
+  const tLX=W-M-54,tVX=W-M;
+
+  doc.setFont('helvetica','normal');doc.setFontSize(9);
+  doc.setTextColor(...GR);doc.text('Subtotal',tLX,y);
+  doc.setTextColor(...BK);doc.text(invFmtEurPdf(sub),tVX,y,{align:'right'});y+=6;
+  doc.setTextColor(...GR);doc.text(taxLabel,tLX,y);
+  doc.setTextColor(...BK);doc.text(invFmtEurPdf(tax),tVX,y,{align:'right'});y+=6;
+  hline(y,[60,60,60]);y+=6;
+  doc.setFont('helvetica','bold');doc.setFontSize(11);doc.setTextColor(...BK);
+  doc.text('Total',tLX,y);doc.text(invFmtEurPdf(total),tVX,y,{align:'right'});
+  y+=12;hline(y);y+=8;
+
+  // --- PAYMENT INFO ---
+  doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(...GR);
+  doc.text('Please address the payment to gloobles BV using :',M,y);y+=8;
+  doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(...BK);
+  doc.text('EUR account',M,y);doc.text('USD account',mid,y);y+=5;
+  doc.setFont('helvetica','normal');
+  doc.text('IBAN: NL67 ABNA 0825 6779 04',M,y);doc.text('IBAN: NL49 ABNA 0142 6111 15',mid,y);y+=5;
+  doc.text('BIC: ABNANL2A',M,y);doc.text('BIC: ABNANL2A',mid,y);
+
+  // --- FOOTER ---
+  hline(H-14);
+  doc.setFontSize(8);doc.setTextColor(...GR);
+  doc.text('gloobles b.v. — Prinsengracht 821, 1015 DZ Amsterdam — finance@gloobles.com',W/2,H-9,{align:'center'});
+
+  // Save invoice number to localStorage
+  const numPart=invNum.replace(/[^0-9]/g,'');
+  if(numPart)localStorage.setItem('gloobles_inv_num',numPart);
+
+  const filename=`${invNum.replace(/\s+/g,'_')}_invoice.pdf`;
+  doc.save(filename);
+}
+
+document.addEventListener('DOMContentLoaded',()=>{initInvoice();});
 </script>
 
 </body>
