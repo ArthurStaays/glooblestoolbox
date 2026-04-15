@@ -126,6 +126,17 @@ textarea{resize:vertical;min-height:52px;}
 .view-nav-btn:hover{color:var(--black);border-color:var(--black);}
 .view-nav-btn svg{width:11px;height:11px;flex-shrink:0;}
 
+/* MOBILE */
+@media(max-width:768px){
+  .app{grid-template-columns:1fr;}
+  .ob-wrap{padding:1rem;}
+  nav{padding:.9rem 1.2rem;}
+  .tabs{padding:0 1rem;overflow-x:auto;}
+  .hero{padding:2.5rem 1.2rem 2rem;}
+  .section{padding:1.5rem 1.2rem;}
+  .row2{grid-template-columns:1fr 1fr;}
+}
+
 /* INVOICE GENERATOR */
 .inv-item-hdr{display:grid;grid-template-columns:1fr 48px 88px 78px 20px;gap:6px;margin-bottom:4px;}
 .inv-item-row{display:grid;grid-template-columns:1fr 48px 88px 78px 20px;gap:6px;align-items:center;margin-bottom:5px;}
