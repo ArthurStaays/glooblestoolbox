@@ -849,6 +849,15 @@ function gen(){
   document.getElementById('preview').innerHTML=`<div class="wa-bubble">${fmtWa(msg)}<div class="wa-time">${t} ✓✓</div></div>`;
   document.getElementById('copybtn').style.display='block';
 }
+function copyIt(){
+  if(!lastMsg)return;
+  navigator.clipboard.writeText(lastMsg).then(()=>{
+    const btn=document.getElementById('copybtn');
+    const orig=btn.textContent;
+    btn.textContent='Copied!';
+    setTimeout(()=>btn.textContent=orig,2000);
+  });
+}
 function fmtWa(s){
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
     .replace(/\*([^*]+)\*/g,'<strong>$1</strong>')
