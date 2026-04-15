@@ -200,26 +200,58 @@ footer span{font-size:11px;color:var(--text2);}
     <div style="font-family:'DM Mono',monospace;font-size:15px;font-weight:400;color:#0e0e0e;letter-spacing:.02em;margin-bottom:1.5rem;">gloobles</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:1200px;">
 
-      <!-- COMMISSION ON GROSS RATE -->
+      <!-- COMMISSION CALCULATOR -->
       <div class="panel">
-        <div class="ptitle">Commission on gross rate</div>
+        <div class="ptitle">Commission calculator</div>
         <div class="sec">
           <div class="lbl">Gross rate (€)</div>
           <input type="number" id="c-gross" placeholder="5000" oninput="calcComm()" />
+        </div>
+        <div class="sec">
+          <div class="lbl">Country</div>
+          <select id="c-country" onchange="calcComm()" style="width:100%;padding:7px 10px;font-size:13px;border:0.5px solid #ccc;border-radius:var(--radius-sm);background:#fff;color:var(--text);">
+            <option value="10">France — 10%</option>
+            <option value="10">Spain — 10%</option>
+            <option value="10">Portugal — 10%</option>
+            <option value="13">Greece — 13%</option>
+            <option value="10">Italy — 10%</option>
+            <option value="20">UK — 20%</option>
+            <option value="19">Germany — 19%</option>
+            <option value="9">Netherlands — 9%</option>
+            <option value="6">Belgium — 6%</option>
+            <option value="0">UAE — 0%</option>
+            <option value="0">Morocco — 0%</option>
+            <option value="0">Maldives — 0%</option>
+            <option value="0">Thailand — 0%</option>
+            <option value="0">Bali / Indonesia — 0%</option>
+            <option value="custom">Custom...</option>
+          </select>
+          <input type="number" id="c-vat-custom" placeholder="VAT %" style="display:none;margin-top:6px;" oninput="calcComm()" />
+        </div>
+        <div class="sec">
+          <div class="lbl">Calculate commission on</div>
+          <div class="toggle-group" style="margin-bottom:0">
+            <button class="tog-btn active" id="comm-tog-gross" onclick="setCommMode('gross')">Gross rate</button>
+            <button class="tog-btn" id="comm-tog-ht" onclick="setCommMode('ht')">Net rate (HT)</button>
+          </div>
         </div>
         <div class="sec">
           <div class="lbl">Commission (%)</div>
           <input type="number" id="c-pct" placeholder="10" oninput="calcComm()" />
         </div>
         <div style="background:var(--bg2);border-radius:var(--radius-sm);padding:12px 14px;margin-top:4px;">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
             <div>
-              <div style="font-size:11px;color:var(--text2);margin-bottom:4px;">Commission amount</div>
-              <div style="font-size:20px;font-weight:500;color:var(--gd);" id="c-result">—</div>
+              <div style="font-size:11px;color:var(--text2);margin-bottom:4px;">HT rate</div>
+              <div style="font-size:16px;font-weight:500;" id="c-ht">—</div>
+            </div>
+            <div>
+              <div style="font-size:11px;color:var(--text2);margin-bottom:4px;">Commission</div>
+              <div style="font-size:16px;font-weight:500;color:var(--gd);" id="c-result">—</div>
             </div>
             <div>
               <div style="font-size:11px;color:var(--text2);margin-bottom:4px;">Net to hotel</div>
-              <div style="font-size:20px;font-weight:500;" id="c-net">—</div>
+              <div style="font-size:16px;font-weight:500;" id="c-net">—</div>
             </div>
           </div>
         </div>
@@ -432,13 +464,43 @@ function showView(name){
 // --- CALCULATORS ---
 function fmt(n){return'€'+n.toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2});}
 
+let commMode='gross';
+function setCommMode(mode){
+  commMode=mode;
+  document.getElementById('comm-tog-gross').classList.toggle('active',mode==='gross');
+  document.getElementById('comm-tog-ht').classList.toggle('active',mode==='ht');
+  calcComm();
+}
+
+function getVat(){
+  const sel=document.getElementById('c-country').value;
+  if(sel==='custom') return parseFloat(document.getElementById('c-vat-custom').value)||0;
+  return parseFloat(sel)||0;
+}
+
+document.addEventListener('DOMContentLoaded',function(){
+  document.getElementById('c-country').addEventListener('change',function(){
+    document.getElementById('c-vat-custom').style.display=this.value==='custom'?'block':'none';
+    calcComm();
+  });
+});
+
 function calcComm(){
-  const g=parseFloat(document.getElementById('c-gross').value);
-  const p=parseFloat(document.getElementById('c-pct').value);
-  if(isNaN(g)||isNaN(p)){document.getElementById('c-result').textContent='—';document.getElementById('c-net').textContent='—';return;}
-  const comm=g*p/100;
+  const gross=parseFloat(document.getElementById('c-gross').value);
+  const pct=parseFloat(document.getElementById('c-pct').value);
+  if(isNaN(gross)||isNaN(pct)){
+    document.getElementById('c-result').textContent='—';
+    document.getElementById('c-net').textContent='—';
+    document.getElementById('c-ht').textContent='—';
+    return;
+  }
+  const vat=getVat();
+  const ht=gross/(1+vat/100);
+  document.getElementById('c-ht').textContent=fmt(ht);
+  const base=commMode==='ht'?ht:gross;
+  const comm=base*pct/100;
   document.getElementById('c-result').textContent=fmt(comm);
-  document.getElementById('c-net').textContent=fmt(g-comm);
+  document.getElementById('c-net').textContent=fmt(ht-comm);
 }
 
 function calcTopup(){
