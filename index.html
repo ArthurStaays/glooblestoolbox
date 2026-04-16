@@ -565,7 +565,7 @@ footer span{font-size:11px;color:var(--text2);}
         </div>
         <div class="sec">
           <div class="lbl">Any requests?</div>
-          <input type="text" id="cf-requests" placeholder="High floor, twin beds..." />
+          <textarea id="cf-requests" placeholder="High floor, twin beds...&#10;* Quiet room..."></textarea>
         </div>
         <div class="sec">
           <div class="lbl">Rate inclusion</div>
@@ -576,6 +576,16 @@ footer span{font-size:11px;color:var(--text2);}
           <input type="file" id="cf-photo" accept="image/*" onchange="previewPhoto(this)" style="font-size:12px;padding:6px;" />
           <div id="cf-photo-preview" style="margin-top:8px;display:none;">
             <img id="cf-photo-img" style="width:100%;border-radius:var(--radius-sm);max-height:140px;object-fit:cover;" />
+            <button onclick="startCrop()" style="margin-top:6px;width:100%;font-size:11px;padding:5px 0;cursor:pointer;border:1px solid #D1D5DB;border-radius:4px;background:#f9f9f9;color:#2D2E2C;">Recadrer l'image</button>
+          </div>
+          <div id="cf-crop-area" style="display:none;margin-top:8px;">
+            <div style="max-height:320px;overflow:hidden;border-radius:var(--radius-sm);">
+              <img id="cf-crop-img" style="max-width:100%;display:block;" />
+            </div>
+            <div style="display:flex;gap:6px;margin-top:6px;">
+              <button onclick="applyCrop()" style="flex:1;font-size:11px;padding:5px 0;cursor:pointer;border:1px solid #2D2E2C;border-radius:4px;background:#2D2E2C;color:#fff;">Appliquer</button>
+              <button onclick="cancelCrop()" style="flex:1;font-size:11px;padding:5px 0;cursor:pointer;border:1px solid #D1D5DB;border-radius:4px;background:#f9f9f9;color:#2D2E2C;">Annuler</button>
+            </div>
           </div>
         </div>
         <button class="gen-btn" onclick="previewConfirm()">Preview</button>
@@ -1059,6 +1069,46 @@ function previewPhoto(input){
   reader.readAsDataURL(file);
 }
 
+let cfCropper=null;
+function startCrop(){
+  const setup=()=>{
+    if(!document.getElementById('cropper-css')){
+      const l=document.createElement('link');l.id='cropper-css';l.rel='stylesheet';
+      l.href='https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css';
+      document.head.appendChild(l);
+    }
+    if(cfCropper){cfCropper.destroy();cfCropper=null;}
+    document.getElementById('cf-photo-preview').style.display='none';
+    document.getElementById('cf-crop-area').style.display='block';
+    const img=document.getElementById('cf-crop-img');
+    // onload assigned before src to catch async load; removeAttribute forces reload if src unchanged
+    img.onload=()=>{
+      cfCropper=new Cropper(img,{aspectRatio:435/260,viewMode:1,autoCropArea:1});
+    };
+    img.removeAttribute('src');
+    img.src=photoDataUrl;
+    // Safety net for synchronous decode (some browsers / small images)
+    if(img.complete && img.naturalWidth>0) img.onload();
+  };
+  if(window.Cropper){setup();}
+  else{const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js';s.onload=setup;document.head.appendChild(s);}
+}
+function applyCrop(){
+  if(!cfCropper)return;
+  const canvas=cfCropper.getCroppedCanvas({width:870,height:520});
+  if(!canvas)return;
+  photoDataUrl=canvas.toDataURL('image/jpeg',0.95);
+  document.getElementById('cf-photo-img').src=photoDataUrl;
+  cfCropper.destroy();cfCropper=null;
+  document.getElementById('cf-crop-area').style.display='none';
+  document.getElementById('cf-photo-preview').style.display='block';
+}
+function cancelCrop(){
+  if(cfCropper){cfCropper.destroy();cfCropper=null;}
+  document.getElementById('cf-crop-area').style.display='none';
+  document.getElementById('cf-photo-preview').style.display='block';
+}
+
 const GROUP323_SVG=`<svg width="50" height="30" viewBox="0 0 50 30" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 <path d="M39.2113 28L39.5 27.5C39.5 27.1 39.8333 26.6667 40 26.5C40.2667 26.1406 40.7778 26.0169 41 26C41.6667 25.8333 43.2 25.7 44 26.5C44.8 27.3 44.6667 28.5 44.5 29L43.5 29.5L43 29.2679L42.5 29.5H42H41.5L41 29L40.5 29.2679L39.5 29L39.2113 28Z" fill="white"/>
 <path d="M5 28C5.4 26.8 3.5 26.1667 2.5 26C1.83333 26.1667 0.5 26.8 0.5 28C0.5 29.2 1.5 28.8333 2 28.5C2.4 29.3 3.16667 29.1667 3.5 29H4C4.16667 29.1667 5 28.5 5 28Z" fill="white"/>
@@ -1145,14 +1195,14 @@ function previewConfirm(){
         <div style="${RS}"><span style="${LS}">room type</span><span style="${VS};white-space:pre-line;">${rooms}</span></div>
         <div style="${RS}"><span style="${LS}">cancellation policy</span><span style="${VS}">${cxl}</span></div>
       </div>
-      <div style="margin-top:44px;">
+      ${occasionRow||requestsRow||inclusionRow?`<div style="margin-top:44px;">
         <div style="font-family:'GTAmerica',sans-serif;font-size:12px;line-height:1.7;margin-bottom:12px;color:#2D2E2C;">the full scoop</div>
         <div style="border-bottom:1px solid #E5E7EB;">
           ${occasionRow}
           ${requestsRow}
           ${inclusionRow}
         </div>
-      </div>
+      </div>`:''}
       <div style="margin-top:44px;padding:28px 0;text-align:center;">
         <img src="data:image/svg+xml,${encodeURIComponent(BESPOKE_SVG)}" style="width:59px;height:40px;display:block;margin:0 auto 12px;"/>
         <div style="font-family:'GTAmerica',sans-serif;font-size:11px;color:#2D2E2C;">curated travel tips at your fingertips</div>
@@ -1169,7 +1219,15 @@ function printConfirm(){
   const done=()=>{btn.textContent='Download PDF';btn.disabled=false;};
 
   const doCapture=()=>{
-    html2canvas(preview,{scale:2,useCORS:true,backgroundColor:'#ffffff',logging:false}).then(canvas=>{
+    // Render in a fixed-width offscreen clone so PDF is always 435px wide regardless of screen size
+    const inner=preview.firstElementChild;
+    if(!inner)return done();
+    const clone=document.createElement('div');
+    clone.style.cssText='position:absolute;left:-9999px;top:0;width:435px;background:#ffffff;';
+    clone.innerHTML=inner.outerHTML;
+    document.body.appendChild(clone);
+    html2canvas(clone,{scale:2,useCORS:true,backgroundColor:'#ffffff',logging:false}).then(canvas=>{
+      document.body.removeChild(clone);
       const {jsPDF}=window.jspdf;
       const mmW=canvas.width/2*25.4/96;
       const mmH=canvas.height/2*25.4/96;
@@ -1178,7 +1236,7 @@ function printConfirm(){
       const name='gloobles_'+(cfGuests[0]?.name||'booking').split(' ')[0].toLowerCase()+'.pdf';
       doc.save(name);
       done();
-    }).catch(e=>{console.error(e);done();});
+    }).catch(e=>{document.body.removeChild(clone);console.error(e);done();});
   };
 
   const loadLib=(src,check,cb)=>{
