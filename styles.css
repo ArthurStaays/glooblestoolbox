@@ -54,7 +54,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:1.1rem
 .section-label::after{content:'';flex:1;height:0.5px;background:var(--border);}
 .tools-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;border:0.5px solid var(--border);border-radius:4px;overflow:hidden;background:var(--border);}
 .tool-empty{background:var(--border);}
-.tool-card{background:var(--white);padding:1.5rem;cursor:pointer;transition:background .15s;display:block;position:relative;border:none;text-align:left;width:100%;font-family:var(--mono);}
+.tool-card{background:var(--white);padding:1.5rem;cursor:pointer;transition:background .15s;display:flex;flex-direction:column;align-items:flex-start;position:relative;border:none;text-align:left;width:100%;font-family:var(--mono);}
 .tool-card:hover{background:var(--gray);}
 .tool-card.coming-soon{cursor:default;opacity:.5;}
 .tool-card.coming-soon:hover{background:var(--white);}
