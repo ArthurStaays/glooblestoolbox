@@ -46,7 +46,8 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:1.1rem
 .section{padding:2.5rem 2.5rem;}
 .section-label{font-size:11px;color:var(--text2);letter-spacing:.1em;text-transform:lowercase;margin-bottom:1.5rem;display:flex;align-items:center;gap:12px;}
 .section-label::after{content:'';flex:1;height:0.5px;background:var(--border);}
-.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1px;border:0.5px solid var(--border);border-radius:4px;overflow:hidden;background:var(--border);}
+.tools-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;border:0.5px solid var(--border);border-radius:4px;overflow:hidden;background:var(--border);}
+.tool-empty{background:var(--border);}
 .tool-card{background:var(--white);padding:1.5rem;cursor:pointer;transition:background .15s;display:block;position:relative;border:none;text-align:left;width:100%;font-family:var(--mono);}
 .tool-card:hover{background:var(--gray);}
 .tool-card.coming-soon{cursor:default;opacity:.5;}
@@ -140,6 +141,9 @@ textarea{resize:vertical;min-height:52px;}
   .hero{padding:2.5rem 1.2rem 2rem;}
   .section{padding:1.5rem 1.2rem;}
   .row2{grid-template-columns:1fr 1fr;}
+  .calc-grid{grid-template-columns:1fr 1fr !important;}
+  .tools-grid{grid-template-columns:repeat(2,1fr);}
+  .tool-empty{display:none;}
 }
 
 /* INVOICE GENERATOR */
@@ -183,41 +187,45 @@ footer span{font-size:11px;color:var(--text2);}
         <div class="tool-desc">generate personalised whatsapp offers with hotel options, pricing, vip perks and cancellation policies in seconds.</div>
         <span class="tool-arrow">↗</span>
       </button>
-      <button class="tool-card" onclick="openTool('invoice')">
-        <div class="tool-tag"><span class="tool-dot"></span>active</div>
-        <div class="tool-name">invoice generator</div>
-        <div class="tool-desc">generate a clean, branded PDF invoice to send to your clients in seconds — from €0 to ready-to-send.</div>
-        <span class="tool-arrow">↗</span>
-      </button>
-      <div class="tool-card coming-soon">
-        <div class="tool-tag"><span class="tool-dot off"></span>coming soon</div>
-        <div class="tool-name">email templates</div>
-        <div class="tool-desc">pre-built client email templates for confirmations, follow-ups, and special requests.</div>
-        <span class="soon-badge">soon</span>
-      </div>
-      <button class="tool-card" onclick="openTool('price')">
-        <div class="tool-tag"><span class="tool-dot"></span>active</div>
-        <div class="tool-name">price calculator</div>
-        <div class="tool-desc">commission, top-up, card fees, fx rates — all your pricing calculations in one place.</div>
-        <span class="tool-arrow">↗</span>
-      </button>
-    </div>
-  </div>
-  <div class="section" style="padding-top:0">
-    <div class="section-label">operations</div>
-    <div class="tools-grid">
       <button class="tool-card" onclick="openTool('confirm')">
         <div class="tool-tag"><span class="tool-dot"></span>active</div>
         <div class="tool-name">booking confirmation</div>
         <div class="tool-desc">generate a branded PDF booking confirmation to send to your clients.</div>
         <span class="tool-arrow">↗</span>
       </button>
+      <button class="tool-card" onclick="openTool('price')">
+        <div class="tool-tag"><span class="tool-dot"></span>active</div>
+        <div class="tool-name">price calculator</div>
+        <div class="tool-desc">commission, top-up, card fees, fx rates — all your pricing calculations in one place.</div>
+        <span class="tool-arrow">↗</span>
+      </button>
+      <button class="tool-card" onclick="openTool('invoice')">
+        <div class="tool-tag"><span class="tool-dot"></span>active</div>
+        <div class="tool-name">invoice generator</div>
+        <div class="tool-desc">generate a clean, branded PDF invoice to send to your clients in seconds — from €0 to ready-to-send.</div>
+        <span class="tool-arrow">↗</span>
+      </button>
+      <div class="tool-empty"></div>
+    </div>
+  </div>
+  <div class="section" style="padding-top:0">
+    <div class="section-label">coming soon</div>
+    <div class="tools-grid">
+      <div class="tool-card coming-soon">
+        <div class="tool-tag"><span class="tool-dot off"></span>coming soon</div>
+        <div class="tool-name">email templates</div>
+        <div class="tool-desc">pre-built client email templates for confirmations, follow-ups, and special requests.</div>
+        <span class="soon-badge">soon</span>
+      </div>
       <div class="tool-card coming-soon">
         <div class="tool-tag"><span class="tool-dot off"></span>coming soon</div>
         <div class="tool-name">itinerary builder</div>
         <div class="tool-desc">build day-by-day travel itineraries ready to share with clients.</div>
         <span class="soon-badge">soon</span>
       </div>
+      <div class="tool-empty"></div>
+      <div class="tool-empty"></div>
+      <div class="tool-empty"></div>
     </div>
   </div>
 </div>
@@ -230,7 +238,7 @@ footer span{font-size:11px;color:var(--text2);}
       <button class="view-nav-btn" onclick="showView('home')"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M1.5 5.5L6 1.5l4.5 4M2.5 4.5V10.5h2.5V7.5h2V10.5h2.5V4.5"/></svg>accueil</button>
     </div>
     <div style="font-family:'DM Mono',monospace;font-size:15px;font-weight:400;color:#0e0e0e;letter-spacing:.02em;margin-bottom:1.5rem;">gloobles</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:1200px;">
+    <div class="calc-grid" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:1400px;">
 
       <!-- COMMISSION CALCULATOR -->
       <div class="panel">
