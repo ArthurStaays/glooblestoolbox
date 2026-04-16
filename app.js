@@ -13,16 +13,39 @@ let openTabs=['home'];
 let navHistory=[];
 let currentView='home';
 let cfInited=false;
+let quickStartOpen=false;
+
+const quickStartTools=['offer','price','confirm'];
 
 function renderTabs(){
   const bar=document.getElementById('tabs-bar');
-  bar.innerHTML=openTabs.map(name=>{
+  const dynamicTabs=openTabs.map(name=>{
     const active=name===currentView?' active':'';
     const dot=name!=='home'?'<span class="tab-dot"></span>':'';
     const close=name!=='home'?`<span class="tab-close" onclick="closeTab('${name}',event)">✕</span>`:'';
     const label=name==='home'?'home':toolLabels[name];
     return `<button class="tab${active}" onclick="showView('${name}')">${dot}${label}${close}</button>`;
   }).join('');
+  const dropdownItems=quickStartTools.map(name=>`
+    <button class="qs-item" onclick="openTool('${name}');closeQuickStart()">
+      <span class="tab-dot"></span>${toolLabels[name]}
+    </button>`).join('');
+  const qs=`<div class="qs-wrap" id="qs-wrap">
+    <button class="tab qs-tab${quickStartOpen?' qs-open':''}" onclick="toggleQuickStart(event)">quick start ▾</button>
+    <div class="qs-menu${quickStartOpen?' open':''}">
+      ${dropdownItems}
+    </div>
+  </div>`;
+  bar.innerHTML=dynamicTabs+qs;
+}
+function toggleQuickStart(e){
+  e.stopPropagation();
+  quickStartOpen=!quickStartOpen;
+  renderTabs();
+}
+function closeQuickStart(){
+  quickStartOpen=false;
+  renderTabs();
 }
 function openTool(name){
   if(!openTabs.includes(name)) openTabs.push(name);
@@ -194,6 +217,7 @@ function pd(id,y,m,d){
 document.addEventListener('click',e=>{
   if(!e.target.closest('.cal-wrap'))document.querySelectorAll('.cal-pop').forEach(p=>p.classList.remove('open'));
   hotels.forEach(h=>{if(!e.target.closest('#hdr-'+h.id))closeSug(h.id);});
+  if(!e.target.closest('.qs-wrap')&&quickStartOpen)closeQuickStart();
 });
 
 // --- HOTELS ---
