@@ -656,4 +656,18 @@ function initConfirm(){
   s('cf-inclusion','Daily Breakfast\nUpgrade upon availability to next room category\nEarly check in and late check out upon availability\nUSD 100 credit in Food & Beverage');
 }
 
-document.addEventListener('DOMContentLoaded',()=>{initInvoice();initConfirm();});
+document.addEventListener('DOMContentLoaded',()=>{
+  initInvoice();initConfirm();
+  if(sessionStorage.getItem('gl-auth')==='1')document.getElementById('pw-gate').style.display='none';
+});
+
+function checkPw(){
+  const input=document.getElementById('pw-input');
+  if(input.value==='gloobles26!'){
+    sessionStorage.setItem('gl-auth','1');
+    document.getElementById('pw-gate').style.display='none';
+  } else {
+    document.getElementById('pw-error').style.display='block';
+    input.value='';input.focus();
+  }
+}
