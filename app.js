@@ -507,7 +507,7 @@ function previewConfirm(){
   document.getElementById('cf-preview').innerHTML=`
     <div style="font-family:'GTAmerica',sans-serif;color:#2D2E2C;max-width:435px;margin:0 auto;background:#fff;padding:28px 24px;">
       <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:44px;">
-        <span style="font-family:'GTAmericaMono',monospace;font-size:11px;letter-spacing:0.02em;color:#111;font-weight:400;">gloobles</span>
+        <span style="font-family:'GTSuper',serif;font-size:13px;font-weight:500;color:#111;">gloobles</span>
         <span style="font-family:'GTAmericaMono',monospace;font-size:9px;color:#9CA3AF;">${dest}</span>
       </div>
       <div style="margin-bottom:36px;">
