@@ -561,15 +561,7 @@ function printConfirm(){
   const done=()=>{btn.textContent='Download PDF';btn.disabled=false;};
 
   const doCapture=()=>{
-    // Render in a fixed-width offscreen clone so PDF is always 435px wide regardless of screen size
-    const inner=preview.firstElementChild;
-    if(!inner)return done();
-    const clone=document.createElement('div');
-    clone.style.cssText='position:absolute;left:-9999px;top:0;width:435px;background:#ffffff;';
-    clone.innerHTML=inner.outerHTML;
-    document.body.appendChild(clone);
-    html2canvas(clone,{scale:2,useCORS:true,backgroundColor:'#ffffff',logging:false}).then(canvas=>{
-      document.body.removeChild(clone);
+    html2canvas(preview,{scale:2,useCORS:true,backgroundColor:'#ffffff',logging:false}).then(canvas=>{
       const {jsPDF}=window.jspdf;
       const mmW=canvas.width/2*25.4/96;
       const mmH=canvas.height/2*25.4/96;
@@ -578,7 +570,7 @@ function printConfirm(){
       const name='gloobles_'+(cfGuests[0]?.name||'booking').split(' ')[0].toLowerCase()+'.pdf';
       doc.save(name);
       done();
-    }).catch(e=>{document.body.removeChild(clone);console.error(e);done();});
+    }).catch(e=>{console.error(e);done();});
   };
 
   doCapture();
