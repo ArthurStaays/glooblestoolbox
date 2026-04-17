@@ -339,7 +339,7 @@ function gen(){
   const cxlBlock=(cxlMode==='all'&&cxlAllText)?`\n*Cancellation policy*\n${cxlAllText}\n`:'';
   const intro=opener?`${opener}\n\n`:'';
   const datePart=dateRange?`, *${dateRange}*`:'';
-  const msg=`Dear ${client},\n\n${intro}I'm pleased to share some options for your ${nights} ${nightWord} in *${dest}*${datePart}. Thank you so much for trusting me with this request.\n${hotelLines}${cxlBlock}\nAt gloobles, we always work hard to ensure you have the very best experience wherever you go. To us, you really are a VIP.\n\nCurious what that looks like?\n• A delicious daily breakfast, on the house.\n• A room upgrade, whenever we can swing it.\n• Check-in and check-out at times that suit you.\n• Some extra spending credit.\n• Special welcome present & note.\n\nDo let us know your thoughts at your soonest convenience and don't hesitate if you have any questions. We look forward to hearing from you!\n\nWarm regards,\n${agent}`;
+  const msg=`Dear ${client},\n\n${intro}I'm pleased to share some options for your ${nights} ${nightWord} in *${dest}*${datePart}. Thank you so much for trusting me with this request.\n${hotelLines}${cxlBlock}\nAt gloobles, we always work hard to ensure you have the very best experience wherever you go.\n\nCurious what that looks like?\n• A delicious daily breakfast, on the house.\n• A room upgrade, whenever we can swing it.\n• Check-in and check-out at times that suit you.\n• Some extra spending credit.\n• Special welcome present & note.\n\nDo let us know your thoughts at your soonest convenience and don't hesitate if you have any questions. We look forward to hearing from you!\n\nWarm regards,\n${agent}`;
   lastMsg=msg;
   const now=new Date();
   const t=`${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
@@ -505,8 +505,8 @@ function previewConfirm(){
   const requests=g('cf-requests');
 
   const RS='border-top:1px solid #E5E7EB;padding:16px 24px;';
-  const LS="font-family:'GTAmerica',sans-serif;font-size:8px;color:#9CA3AF;display:block;margin-bottom:7px;letter-spacing:0.03em;";
-  const VS="font-family:'GTAmerica',sans-serif;font-size:11px;color:#2D2E2C;line-height:1.55;";
+  const LS="font-family:'GTAmerica',sans-serif;font-size:8px;color:#9CA3AF;display:block;margin-bottom:7px;letter-spacing:normal;";
+  const VS="font-family:'GTAmerica',sans-serif;font-size:10px;color:#2D2E2C;line-height:1.55;";
   const DIV='width:0.5px;background:#E5E7EB;flex-shrink:0;';
 
   const photoOverlay=`<img src="data:image/svg+xml,${encodeURIComponent(GROUP323_SVG)}" style="position:absolute;top:-27px;right:12px;width:50px;height:30px;"/>`;
@@ -526,7 +526,7 @@ function previewConfirm(){
         <span style="font-family:'GTAmericaMono',monospace;font-size:9px;color:#9CA3AF;">${dest}</span>
       </div>
       <div style="margin-bottom:36px;">
-        <div style="font-family:'GTSuper',serif;font-size:36px;font-weight:500;text-transform:uppercase;margin-bottom:10px;line-height:1.05;color:#111;">HI ${firstName.toUpperCase()}!</div>
+        <div style="font-family:'GTSuper',serif;font-size:21px;font-weight:500;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px;line-height:1.1;color:#111;">HI ${firstName.toUpperCase()}!</div>
         <div style="font-family:'GTAmerica',sans-serif;font-size:12px;line-height:1.7;color:#2D2E2C;">Here is your booking confirmation for ${hotel}.</div>
       </div>
       ${photoEl}
