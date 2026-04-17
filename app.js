@@ -652,7 +652,7 @@ function initConfirm(){
   s('cf-cxl','Your reservation is cancellable until the 7th of March 2026');
   s('cf-occasion','-');
   s('cf-requests','-');
-  s('cf-inclusion','Early check-in (12:00hrs) upon availability\n* Upgrade upon availability to the next room category\n* Late check out (16:00hrs) upon availability\n* Daily Dylan breakfast in the brasserie\n* Welcome drink in Bar Brasserie OCCO\n* USD 100 Food & Beverage credit');
+  s('cf-inclusion','Daily Breakfast\nUpgrade upon availability to next room category\nEarly check in and late check out upon availability\nUSD 100 credit in Food & Beverage');
 }
 
 document.addEventListener('DOMContentLoaded',()=>{initInvoice();initConfirm();});
