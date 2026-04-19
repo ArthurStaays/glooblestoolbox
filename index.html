@@ -456,13 +456,13 @@
 
       <!-- LEFT: FORM -->
       <div class="panel">
-        <div class="ptitle">Invoice details</div>
+        <div class="ptitle">Details</div>
 
         <div class="sec">
           <div class="row2">
             <div>
-              <div class="lbl">Invoice number</div>
-              <input type="text" id="inv-num" placeholder="gloobles-416" />
+              <div class="lbl">Reference</div>
+              <input type="text" id="inv-num" placeholder="gloobles-416" oninput="invLivePreview()" />
             </div>
             <div></div>
           </div>
@@ -471,11 +471,11 @@
           <div class="row2">
             <div>
               <div class="lbl">Date of issue</div>
-              <input type="date" id="inv-date-issue" />
+              <input type="date" id="inv-date-issue" oninput="invLivePreview()" />
             </div>
             <div>
               <div class="lbl">Date due</div>
-              <input type="date" id="inv-date-due" />
+              <input type="date" id="inv-date-due" oninput="invLivePreview()" />
             </div>
           </div>
         </div>
@@ -530,14 +530,14 @@
           <div class="inv-total-row grand"><span>Total</span><span id="inv-total-disp">€ 0,00</span></div>
         </div>
 
-        <button class="gen-btn" onclick="generateInvoicePDF()">Generate Invoice PDF</button>
+        <button class="gen-btn" onclick="generateInvoicePDF()">Download PDF</button>
       </div>
 
       <!-- RIGHT: PREVIEW -->
       <div class="panel" style="display:flex;flex-direction:column;gap:10px;">
-        <div class="ptitle">Invoice preview</div>
+        <div class="ptitle">Preview</div>
         <div class="inv-preview-wrap" id="inv-preview">
-          <div style="text-align:center;font-size:12px;color:#9E9E9E;padding:60px 0;">Fill the form and click Generate Invoice PDF</div>
+          <div style="text-align:center;font-size:12px;color:#9E9E9E;padding:60px 0;">Fill the form to see the preview</div>
         </div>
       </div>
 
