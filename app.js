@@ -686,7 +686,7 @@ function fmtInvDate(str){
   return d.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
 }
 
-function fmtEur(n){return'\u20ac '+((n||0).toLocaleString('fr-FR',{minimumFractionDigits:2,maximumFractionDigits:2}));}
+function fmtEur(n){const v=(n||0).toFixed(2);const[i,d]=v.split('.');return'\u20ac '+i.replace(/\B(?=(\d{3})+(?!\d))/g,' ')+','+d;}
 
 function rowAmt(item){return(parseFloat(item.qty)||0)*(parseFloat(item.price)||0);}
 
@@ -755,7 +755,7 @@ function invLivePreview(){
     </div>`).join('');
   document.getElementById('inv-preview').innerHTML=`
     <div class="prev-header">
-      <div class="prev-logo">gloobles.</div>
+      <div class="prev-logo">gloobles</div>
       <div class="prev-meta">
         <div><strong>Ref.</strong> ${num}</div>
         <div>Issued: ${issue||'\u2014'}</div>
@@ -803,7 +803,7 @@ function generateInvoicePDF(){
   const subtotal=invItems.reduce((s,i)=>s+rowAmt(i),0);
   const W=210,margin=20;
   doc.setFont('helvetica','bold');doc.setFontSize(18);doc.setTextColor(14,14,14);
-  doc.text('gloobles.',margin,24);
+  doc.text('gloobles',margin,24);
   doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(120,120,120);
   doc.text(`Ref. ${num}`,W-margin,18,{align:'right'});
   doc.text(`Issued: ${issue}`,W-margin,23,{align:'right'});
