@@ -132,7 +132,7 @@ function calcTopup(){
     document.getElementById('t-result').textContent='—';
     return;
   }
-  const client=n*(1+p/100);
+  const client=n/(1-p/100);
   document.getElementById('t-net-display').textContent=fmt(n);
   document.getElementById('t-margin').textContent=fmt(client-n);
   document.getElementById('t-result').textContent=fmt(client);
@@ -142,7 +142,7 @@ function sendToInvoice(){
   const n=parseFloat(document.getElementById('t-net').value);
   const p=parseFloat(document.getElementById('t-pct').value);
   if(!isNaN(n)&&!isNaN(p)){
-    const total=n*(1+p/100);
+    const total=n/(1-p/100);
     invItems=[];invItemId=0;
     addInvItem('',1,total);
     renderInvItems();
