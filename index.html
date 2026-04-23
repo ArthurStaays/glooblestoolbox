@@ -80,12 +80,12 @@
         <div class="tool-desc">pre-built client email templates for confirmations, follow-ups, and special requests.</div>
         <span class="soon-badge">soon</span>
       </div>
-      <div class="tool-card coming-soon">
-        <div class="tool-tag"><span class="tool-dot off"></span>coming soon</div>
-        <div class="tool-name">itinerary builder</div>
-        <div class="tool-desc">build day-by-day travel itineraries ready to share with clients.</div>
-        <span class="soon-badge">soon</span>
-      </div>
+      <button class="tool-card" onclick="openTool('presb')">
+        <div class="tool-tag"><span class="tool-dot"></span>active</div>
+        <div class="tool-name">presentation builder</div>
+        <div class="tool-desc">build polished travel inspiration decks — destinations, brief, team page — and export as a branded PDF.</div>
+        <span class="tool-arrow">↗</span>
+      </button>
       <div class="tool-empty"></div>
       <div class="tool-empty"></div>
       <div class="tool-empty"></div>
@@ -607,6 +607,72 @@
       </div>
     </div>
   </div>
+</div>
+
+<!-- PRESENTATION BUILDER VIEW -->
+<div class="view" id="view-presb">
+  <div class="ob-wrap">
+    <div class="pb-topbar">
+      <div style="font-family:'DM Mono',monospace;font-size:15px;color:#0e0e0e;letter-spacing:.02em;">gloobles</div>
+      <button class="pb-export-btn" onclick="pbExport()">↓ Export PDF</button>
+    </div>
+    <div class="pb-layout">
+
+      <!-- PAGES PANEL -->
+      <div class="pb-pages-panel">
+        <div class="pb-panel-hd"><span>Pages</span></div>
+        <div id="pb-page-list" class="pb-page-list"></div>
+        <div class="pb-add-wrap">
+          <button class="pb-add-btn-main" onclick="pbToggleAdd()">+ Add page</button>
+          <div class="pb-add-menu" id="pb-add-menu">
+            <button onclick="pbAddPage('cover')">Cover</button>
+            <button onclick="pbAddPage('brief')">Brief</button>
+            <button onclick="pbAddPage('destination')">Destination / Experience</button>
+            <button onclick="pbAddPage('team')">Team</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PREVIEW PANEL -->
+      <div class="pb-preview-panel">
+        <div class="pb-panel-hd">
+          <span>Preview</span>
+          <div class="pb-nav-grp">
+            <button onclick="pbNav(-1)">‹</button>
+            <span id="pb-page-num">–</span>
+            <button onclick="pbNav(1)">›</button>
+          </div>
+        </div>
+        <div class="pb-preview-outer" id="pb-preview-outer">
+          <div id="pb-preview-scale">
+            <div id="pb-preview-slide"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EDIT PANEL -->
+      <div class="pb-edit-panel">
+        <div class="pb-panel-hd"><span>Edit</span></div>
+        <div id="pb-edit-form" class="pb-edit-form"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PHOTO CROP MODAL -->
+  <div id="pb-crop-modal" class="pb-crop-modal">
+    <div class="pb-crop-inner">
+      <div class="pb-crop-title">Crop photo</div>
+      <div class="pb-crop-canvas-wrap"><img id="pb-crop-img" /></div>
+      <div class="pb-crop-acts">
+        <button onclick="pbApplyCrop()">Apply crop</button>
+        <button onclick="pbCancelCrop()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXPORT RENDER AREA (hidden) -->
+  <div id="pb-export-area" style="position:fixed;left:-9999px;top:-9999px;width:1440px;height:810px;overflow:hidden;"></div>
 </div>
 
 <footer>
