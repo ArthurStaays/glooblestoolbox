@@ -184,6 +184,26 @@ textarea{resize:vertical;min-height:52px;}
 .prev-rib-cols strong{font-size:10px;}
 .prev-footer{margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border);font-size:9px;color:#aaa;text-align:center;}
 
+/* WHATSAPP FORMATTER */
+.waf-toolbar{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px;}
+.waf-btn{padding:5px 11px;font-size:12px;font-family:inherit;border:0.5px solid var(--border);border-radius:var(--radius-sm);background:#fff;cursor:pointer;color:var(--black);letter-spacing:.01em;}
+.waf-btn:hover{background:var(--bg2);}
+.waf-bold{font-weight:700;}
+.waf-italic{font-style:italic;}
+.waf-strike{text-decoration:line-through;}
+.waf-phone{border-radius:var(--radius-sm);overflow:hidden;flex:1;display:flex;flex-direction:column;}
+.waf-wa-header{background:#075E54;padding:10px 14px;display:flex;align-items:center;gap:10px;}
+.waf-wa-avatar{width:34px;height:34px;border-radius:50%;background:#128C7E;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:#fff;flex-shrink:0;}
+.waf-wa-name{font-size:13px;font-weight:600;color:#fff;line-height:1.2;}
+.waf-wa-status{font-size:10px;color:rgba(255,255,255,.6);}
+.waf-chat{background:#e5ddd5;padding:16px 12px;flex:1;min-height:200px;display:flex;align-items:flex-end;}
+.waf-msg-wrap{display:flex;flex-direction:column;max-width:88%;}
+.waf-bubble{background:#fff;border-radius:0 10px 10px 10px;padding:10px 14px;font-size:13px;line-height:1.65;color:#111;box-shadow:0 1px 2px rgba(0,0,0,.12);word-break:break-word;}
+.waf-bubble code{font-family:monospace;font-size:12px;}
+.waf-bubble strong{font-weight:600;}
+.waf-time{font-size:10px;color:#888;text-align:right;margin-top:3px;padding-right:2px;}
+.waf-quote{border-left:3px solid #25D366;background:#f0faf3;padding:4px 10px;border-radius:0 4px 4px 0;margin:2px 0;color:#111;}
+
 /* FOOTER */
 footer{border-top:0.5px solid var(--border);padding:1.25rem 2.5rem;display:flex;align-items:center;justify-content:space-between;}
 footer span{font-size:11px;color:var(--text2);}

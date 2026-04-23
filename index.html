@@ -63,7 +63,12 @@
         <div class="tool-desc">generate a clean, branded PDF invoice to send to your clients in seconds — from €0 to ready-to-send.</div>
         <span class="tool-arrow">↗</span>
       </button>
-      <div class="tool-empty"></div>
+      <button class="tool-card" onclick="openTool('waformat')">
+        <div class="tool-tag"><span class="tool-dot"></span>active</div>
+        <div class="tool-name">whatsapp formatter</div>
+        <div class="tool-desc">format your whatsapp messages with bold, italic, bullets and more — copy and paste in seconds.</div>
+        <span class="tool-arrow">↗</span>
+      </button>
     </div>
   </div>
   <div class="section" style="padding-top:0">
@@ -559,6 +564,48 @@
         </div>
       </div>
 
+    </div>
+  </div>
+</div>
+
+<!-- WHATSAPP FORMATTER VIEW -->
+<div class="view" id="view-waformat">
+  <div class="ob-wrap">
+    <div style="font-family:'DM Mono',monospace;font-size:15px;font-weight:400;color:#0e0e0e;letter-spacing:.02em;margin-bottom:1.25rem;">gloobles</div>
+    <div class="app">
+      <div class="panel">
+        <div class="ptitle">Message</div>
+        <div class="waf-toolbar">
+          <button class="waf-btn waf-bold" onmousedown="event.preventDefault();wafFormat('bold')" title="Bold">B</button>
+          <button class="waf-btn waf-italic" onmousedown="event.preventDefault();wafFormat('italic')" title="Italic">I</button>
+          <button class="waf-btn waf-strike" onmousedown="event.preventDefault();wafFormat('strike')" title="Strikethrough">S</button>
+          <button class="waf-btn" onmousedown="event.preventDefault();wafFormat('bullet')" title="Bullet point">• Bullet</button>
+          <button class="waf-btn" onmousedown="event.preventDefault();wafFormat('quote')" title="Quote block">❝ Quote</button>
+          <button class="waf-btn" onmousedown="event.preventDefault();wafFormat('numbered')" title="Numbered list">1. List</button>
+        </div>
+        <textarea id="waf-input" placeholder="Type your WhatsApp message here..." oninput="wafPreview()" style="min-height:220px;"></textarea>
+        <button class="gen-btn" style="margin-top:10px;" onclick="wafCopy()">Copy message</button>
+      </div>
+      <div class="panel" style="display:flex;flex-direction:column;gap:10px;">
+        <div class="ptitle">Preview</div>
+        <div class="waf-phone">
+          <div class="waf-wa-header">
+            <div class="waf-wa-avatar">C</div>
+            <div>
+              <div class="waf-wa-name">Client</div>
+              <div class="waf-wa-status">online</div>
+            </div>
+          </div>
+          <div class="waf-chat">
+            <div class="waf-msg-wrap">
+              <div id="waf-bubble" class="waf-bubble">
+                <span style="color:#aaa;font-size:11px;">Your message will appear here</span>
+              </div>
+              <div class="waf-time" id="waf-time"></div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
