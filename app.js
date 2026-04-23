@@ -1064,17 +1064,18 @@ function pbLabel(p){
 function pbRenderPreview(){
   const container=document.getElementById('pb-preview-slide');
   const scaleWrap=document.getElementById('pb-preview-scale');
+  const clip=document.getElementById('pb-preview-clip');
   const outer=document.getElementById('pb-preview-outer');
-  if(!container||!scaleWrap||!outer)return;
+  if(!container||!scaleWrap||!clip||!outer)return;
   const page=pbPages[pbSelected];
   if(!page){container.innerHTML='';return;}
   container.innerHTML='';container.appendChild(pbBuildSlide(page));
   const ow=outer.clientWidth-32,oh=outer.clientHeight-32;
-  const s=Math.min(ow>10?ow/1440:0.42,oh>10?oh/810:0.42,0.56);
-  scaleWrap.style.cssText=`transform:scale(${s});transform-origin:top left;width:1440px;height:810px;`;
-  outer.style.minHeight=Math.ceil(810*s+32)+'px';
+  const s=Math.min(ow>10?ow/1440:0.42,oh>10?oh/810:0.42,0.58);
+  clip.style.cssText='width:'+Math.round(1440*s)+'px;height:'+Math.round(810*s)+'px;overflow:hidden;flex-shrink:0;';
+  scaleWrap.style.cssText='transform:scale('+s+');transform-origin:top left;width:1440px;height:810px;';
   const ct=document.getElementById('pb-page-num');
-  if(ct)ct.textContent=`${pbSelected+1} / ${pbPages.length}`;
+  if(ct)ct.textContent=(pbSelected+1)+' / '+pbPages.length;
 }
 
 function pbBuildSlide(page){
@@ -1129,8 +1130,8 @@ function pbDestHtml(p){
       <span style="font-family:GTAmericaMono,'DM Mono',monospace;font-size:11px;color:#0e0e0e;letter-spacing:.03em;">${pbEsc(p.year||new Date().getFullYear())}</span>
     </div>
     <div style="flex:1;display:flex;min-height:0;">
-      <div style="width:46%;padding:36px 48px;display:flex;flex-direction:column;overflow:hidden;">
-        <div style="font-family:GTSuper,serif;font-size:34px;font-weight:500;color:#0e0e0e;line-height:1.18;margin-bottom:22px;">${pbEsc(p.title||'')}</div>
+      <div style="width:43%;padding:38px 44px;display:flex;flex-direction:column;overflow:hidden;">
+        <div style="font-family:GTSuper,serif;font-size:42px;font-weight:500;color:#0e0e0e;line-height:1.15;margin-bottom:20px;">${pbEsc(p.title||'')}</div>
         <div style="border-top:0.5px solid #e0ddd8;margin-bottom:20px;">
           <div style="display:flex;border-bottom:0.5px solid #e0ddd8;">
             ${pbMetaCell('location',p.location)}${pbMetaCell('nearest airport',p.airport)}${pbMetaCell('trip status',p.status,'last')}
@@ -1142,7 +1143,7 @@ function pbDestHtml(p){
         <div style="font-family:GTAmericaMono,'DM Mono',monospace;font-size:8.5px;color:#888580;letter-spacing:.06em;margin-bottom:9px;">Editor's note</div>
         <div style="font-family:GTAmerica,'DM Mono',monospace;font-size:11.5px;color:#0e0e0e;line-height:1.72;overflow:hidden;flex:1;"><p style="margin:0;">${pbNl(p.note||'')}</p></div>
       </div>
-      <div style="flex:1;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:4px;padding:4px 4px 4px 0;min-width:0;min-height:0;">
+      <div style="flex:1;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:3px;min-width:0;">
         ${photosHtml}
       </div>
     </div>
