@@ -99,6 +99,10 @@ textarea{resize:vertical;min-height:52px;}
 .cal-ico{position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:13px;pointer-events:none;}
 .cal-pop{display:none;position:absolute;top:32px;left:0;z-index:200;background:#fff;border:0.5px solid #ccc;border-radius:var(--radius-sm);padding:8px;box-shadow:0 4px 14px rgba(0,0,0,.12);min-width:230px;}
 .cal-pop.open{display:block;}
+.time-tick{margin-top:7px;}
+.time-tick label{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--text2);cursor:pointer;user-select:none;}
+.time-tick input[type=checkbox]{width:12px;height:12px;cursor:pointer;accent-color:#2D2E2C;}
+.time-sel{margin-top:6px;width:100%;font-size:11px;padding:5px 8px;border:0.5px solid var(--border);border-radius:var(--radius-sm);background:#fff;color:var(--black);font-family:inherit;cursor:pointer;}
 .cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
 .cal-nav button{background:none;border:none;cursor:pointer;font-size:15px;color:var(--text2);padding:2px 5px;}
 .cal-nav span{font-size:12px;font-weight:500;}

@@ -393,6 +393,10 @@ let picked2={cfi:null,cfo:null};
 let inp2={cfi:'cf-in',cfo:'cf-out'};
 let photoDataUrl=null;
 
+function toggleTimePick(selId,cb){
+  document.getElementById(selId).style.display=cb.checked?'block':'none';
+}
+
 function tc2(id){
   const pop=document.getElementById(id);
   const was=pop.classList.contains('open');
@@ -509,10 +513,13 @@ function previewConfirm(){
   const address=g('cf-address');
   const cin=g('cf-in');
   const cout=g('cf-out');
+  const cinTime=document.getElementById('cf-checkin-tick')?.checked?document.getElementById('cf-checkin-sel')?.value:null;
+  const coutTime=document.getElementById('cf-checkout-tick')?.checked?document.getElementById('cf-checkout-sel')?.value:null;
   const price=g('cf-price');
   const cxl=g('cf-cxl');
   const inclusion=g('cf-inclusion');
   const occasion=g('cf-occasion');
+  const payment=g('cf-payment');
   const requests=g('cf-requests');
 
   const RS='border-top:1px solid #E5E7EB;padding:16px 24px;';
@@ -527,7 +534,8 @@ function previewConfirm(){
 
   const isEmpty=v=>!v||v==='-'||v==='\u2014';
   const occasionRow=!isEmpty(occasion)?`<div style="${RS}"><span style="${LS}">special occasion</span><span style="${VS}">${occasion}</span></div>`:'';
-  const requestsRow=!isEmpty(requests)?`<div style="${RS}"><span style="${LS}">any requests?</span><span style="${VS}">${requests}</span></div>`:'';
+  const paymentRow=!isEmpty(payment)?`<div style="${RS}"><span style="${LS}">payment details</span><span style="${VS}">${payment}</span></div>`:'';
+  const requestsRow=!isEmpty(requests)?`<div style="${RS}"><span style="${LS}">general notes</span><span style="${VS}">${requests}</span></div>`:'';
   const inclusionRow=!isEmpty(inclusion)?`<div style="${RS}"><span style="${LS}">rate inclusion</span><span style="${VS};white-space:pre-line;">${inclusion}</span></div>`:'';
 
   document.getElementById('cf-preview').innerHTML=`
@@ -547,12 +555,12 @@ function previewConfirm(){
         <div style="border-top:1px solid #E5E7EB;display:flex;">
           <div style="width:50%;padding:16px 24px;box-sizing:border-box;">
             <span style="${LS}">arrival</span>
-            <div style="${VS};white-space:nowrap;">${cin}</div>
+            <div style="${VS};white-space:nowrap;">${cin}${cinTime?`<br/><span style="font-size:9px;color:#9CA3AF;">check in: ${cinTime}</span>`:''}</div>
           </div>
           <div style="${DIV}"></div>
           <div style="width:50%;padding:16px 24px;box-sizing:border-box;">
             <span style="${LS}">departure</span>
-            <div style="${VS};white-space:nowrap;">${cout}</div>
+            <div style="${VS};white-space:nowrap;">${cout}${coutTime?`<br/><span style="font-size:9px;color:#9CA3AF;">check out: ${coutTime}</span>`:''}</div>
           </div>
         </div>
         <div style="border-top:1px solid #E5E7EB;display:flex;">
@@ -563,10 +571,11 @@ function previewConfirm(){
         <div style="${RS}"><span style="${LS}">room type</span><span style="${VS};white-space:pre-line;">${rooms}</span></div>
         <div style="${RS}"><span style="${LS}">cancellation policy</span><span style="${VS}">${cxl}</span></div>
       </div>
-      ${occasionRow||requestsRow||inclusionRow?`<div style="margin-top:44px;">
+      ${occasionRow||paymentRow||requestsRow||inclusionRow?`<div style="margin-top:44px;">
         <div style="font-family:'GTAmerica',sans-serif;font-size:12px;line-height:1.7;margin-bottom:12px;color:#2D2E2C;">the full scoop</div>
         <div style="border-bottom:1px solid #E5E7EB;">
           ${occasionRow}
+          ${paymentRow}
           ${requestsRow}
           ${inclusionRow}
         </div>

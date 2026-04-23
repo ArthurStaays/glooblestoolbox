@@ -373,15 +373,31 @@
         <div class="sec">
           <div class="lbl">Travel dates</div>
           <div class="row2">
-            <div class="cal-wrap">
-              <input type="text" id="cf-in" placeholder="Arrival" readonly onclick="tc2('cfi')" />
-              <span class="cal-ico">📅</span>
-              <div class="cal-pop" id="cfi"></div>
+            <div>
+              <div class="cal-wrap">
+                <input type="text" id="cf-in" placeholder="Arrival" readonly onclick="tc2('cfi')" />
+                <span class="cal-ico">📅</span>
+                <div class="cal-pop" id="cfi"></div>
+              </div>
+              <div class="time-tick">
+                <label><input type="checkbox" id="cf-checkin-tick" onchange="toggleTimePick('cf-checkin-sel',this)" /> Check in time</label>
+                <select id="cf-checkin-sel" class="time-sel" style="display:none;">
+                  <option>10:00</option><option>11:00</option><option>12:00</option><option>13:00</option><option>14:00</option><option>15:00</option><option>16:00</option><option>17:00</option><option>18:00</option>
+                </select>
+              </div>
             </div>
-            <div class="cal-wrap">
-              <input type="text" id="cf-out" placeholder="Departure" readonly onclick="tc2('cfo')" />
-              <span class="cal-ico">📅</span>
-              <div class="cal-pop" id="cfo"></div>
+            <div>
+              <div class="cal-wrap">
+                <input type="text" id="cf-out" placeholder="Departure" readonly onclick="tc2('cfo')" />
+                <span class="cal-ico">📅</span>
+                <div class="cal-pop" id="cfo"></div>
+              </div>
+              <div class="time-tick">
+                <label><input type="checkbox" id="cf-checkout-tick" onchange="toggleTimePick('cf-checkout-sel',this)" /> Check out time</label>
+                <select id="cf-checkout-sel" class="time-sel" style="display:none;">
+                  <option>10:00</option><option>11:00</option><option>12:00</option><option>13:00</option><option>14:00</option><option>15:00</option><option>16:00</option><option>17:00</option><option>18:00</option>
+                </select>
+              </div>
             </div>
           </div>
         </div>
@@ -407,7 +423,11 @@
           <input type="text" id="cf-occasion" placeholder="Birthday, anniversary..." />
         </div>
         <div class="sec">
-          <div class="lbl">Any requests?</div>
+          <div class="lbl">Payment details</div>
+          <input type="text" id="cf-payment" placeholder="Payment received, balance due..." />
+        </div>
+        <div class="sec">
+          <div class="lbl">General notes</div>
           <textarea id="cf-requests" placeholder="High floor, twin beds...&#10;* Quiet room..."></textarea>
         </div>
         <div class="sec">
