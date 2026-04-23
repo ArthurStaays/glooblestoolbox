@@ -154,43 +154,43 @@ function previewConfirm(){
     :`<div style="position:relative;margin-bottom:44px;"><div style="width:100%;height:260px;background:#E5E7EB;display:flex;align-items:center;justify-content:center;font-family:'GTAmerica',sans-serif;font-size:10px;color:#9CA3AF;">destination photo</div>${photoOverlay}</div>`;
 
   const isEmpty=v=>!v||v==='-'||v==='\u2014';
-  const occasionRow=!isEmpty(occasion)?`<div style="${RS}"><span style="${LS}">special occasion</span><span style="${VS}">${occasion}</span></div>`:'';
-  const paymentRow=!isEmpty(payment)?`<div style="${RS}"><span style="${LS}">payment details</span><span style="${VS}">${payment}</span></div>`:'';
-  const requestsRow=!isEmpty(requests)?`<div style="${RS}"><span style="${LS}">general notes</span><span style="${VS}">${requests}</span></div>`:'';
-  const inclusionRow=!isEmpty(inclusion)?`<div style="${RS}"><span style="${LS}">rate inclusion</span><span style="${VS};white-space:pre-line;">${inclusion}</span></div>`:'';
+  const occasionRow=!isEmpty(occasion)?`<div style="${RS}"><span style="${LS}">special occasion</span><span style="${VS}">${esc(occasion)}</span></div>`:'';
+  const paymentRow=!isEmpty(payment)?`<div style="${RS}"><span style="${LS}">payment details</span><span style="${VS}">${esc(payment)}</span></div>`:'';
+  const requestsRow=!isEmpty(requests)?`<div style="${RS}"><span style="${LS}">general notes</span><span style="${VS}">${esc(requests)}</span></div>`:'';
+  const inclusionRow=!isEmpty(inclusion)?`<div style="${RS}"><span style="${LS}">rate inclusion</span><span style="${VS};white-space:pre-line;">${esc(inclusion)}</span></div>`:'';
 
   document.getElementById('cf-preview').innerHTML=`
     <div style="font-family:'GTAmerica',sans-serif;color:#2D2E2C;max-width:435px;margin:0 auto;background:#fff;padding:28px 24px;">
       <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:44px;">
         <span style="font-family:'GTSuper',serif;font-size:13px;font-weight:500;color:#111;">gloobles</span>
-        <span style="font-family:'GTAmericaMono',monospace;font-size:9px;color:#9CA3AF;">${dest}</span>
+        <span style="font-family:'GTAmericaMono',monospace;font-size:9px;color:#9CA3AF;">${esc(dest)}</span>
       </div>
       <div style="margin-bottom:36px;">
-        <div style="font-family:'GTSuper',serif;font-size:21px;font-weight:500;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px;line-height:1.1;color:#111;">HI ${firstName.toUpperCase()}!</div>
-        <div style="font-family:'GTAmerica',sans-serif;font-size:12px;line-height:1.7;color:#2D2E2C;">Here is your booking confirmation for ${hotel}.</div>
+        <div style="font-family:'GTSuper',serif;font-size:21px;font-weight:500;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px;line-height:1.1;color:#111;">HI ${esc(firstName).toUpperCase()}!</div>
+        <div style="font-family:'GTAmerica',sans-serif;font-size:12px;line-height:1.7;color:#2D2E2C;">Here is your booking confirmation for ${esc(hotel)}.</div>
       </div>
       ${photoEl}
       <div style="border-bottom:1px solid #E5E7EB;">
-        <div style="${RS}"><span style="${LS}">booking number</span><span style="${VS}">${booking}</span></div>
-        <div style="${RS}"><span style="${LS}">location</span><span style="${VS}">${hotel}<br/><span style="text-decoration:underline;text-decoration-color:#D1D5DB;">${address}</span></span></div>
+        <div style="${RS}"><span style="${LS}">booking number</span><span style="${VS}">${esc(booking)}</span></div>
+        <div style="${RS}"><span style="${LS}">location</span><span style="${VS}">${esc(hotel)}<br/><span style="text-decoration:underline;text-decoration-color:#D1D5DB;">${esc(address)}</span></span></div>
         <div style="border-top:1px solid #E5E7EB;display:flex;">
           <div style="width:50%;padding:16px 24px;box-sizing:border-box;">
             <span style="${LS}">arrival</span>
-            <div style="${VS};white-space:nowrap;">${cin}${cinTime?`<br/><span style="font-size:9px;color:#9CA3AF;">check in: ${cinTime}</span>`:''}</div>
+            <div style="${VS};white-space:nowrap;">${esc(cin)}${cinTime?`<br/><span style="font-size:9px;color:#9CA3AF;">check in: ${esc(cinTime)}</span>`:''}</div>
           </div>
           <div style="${DIV}"></div>
           <div style="width:50%;padding:16px 24px;box-sizing:border-box;">
             <span style="${LS}">departure</span>
-            <div style="${VS};white-space:nowrap;">${cout}${coutTime?`<br/><span style="font-size:9px;color:#9CA3AF;">check out: ${coutTime}</span>`:''}</div>
+            <div style="${VS};white-space:nowrap;">${esc(cout)}${coutTime?`<br/><span style="font-size:9px;color:#9CA3AF;">check out: ${esc(coutTime)}</span>`:''}</div>
           </div>
         </div>
         <div style="border-top:1px solid #E5E7EB;display:flex;">
-          <div style="width:50%;padding:16px 24px;box-sizing:border-box;"><span style="${LS}">traveller(s)</span><div style="${VS};white-space:pre-line;">${guests}</div></div>
+          <div style="width:50%;padding:16px 24px;box-sizing:border-box;"><span style="${LS}">traveller(s)</span><div style="${VS};white-space:pre-line;">${esc(guests)}</div></div>
           <div style="${DIV}"></div>
-          <div style="width:50%;padding:16px 24px;box-sizing:border-box;"><span style="${LS}">price (all taxes included)</span><div style="${VS}">${price}</div></div>
+          <div style="width:50%;padding:16px 24px;box-sizing:border-box;"><span style="${LS}">price (all taxes included)</span><div style="${VS}">${esc(price)}</div></div>
         </div>
-        <div style="${RS}"><span style="${LS}">room type</span><span style="${VS};white-space:pre-line;">${rooms}</span></div>
-        <div style="${RS}"><span style="${LS}">cancellation policy</span><span style="${VS}">${cxl}</span></div>
+        <div style="${RS}"><span style="${LS}">room type</span><span style="${VS};white-space:pre-line;">${esc(rooms)}</span></div>
+        <div style="${RS}"><span style="${LS}">cancellation policy</span><span style="${VS}">${esc(cxl)}</span></div>
       </div>
       ${occasionRow||paymentRow||requestsRow||inclusionRow?`<div style="margin-top:44px;">
         <div style="font-family:'GTAmerica',sans-serif;font-size:12px;line-height:1.7;margin-bottom:12px;color:#2D2E2C;">the full scoop</div>

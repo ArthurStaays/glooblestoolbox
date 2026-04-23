@@ -81,7 +81,7 @@ function invLivePreview(){
   const subtotal=invItems.reduce((s,i)=>s+rowAmt(i),0);
   const itemRows=invItems.map(i=>`
     <div class="prev-item-row">
-      <span>${i.desc||'\u2014'}</span>
+      <span>${esc(i.desc)||'\u2014'}</span>
       <span style="text-align:center;">${parseFloat(i.qty)||1}</span>
       <span style="text-align:right;">${fmtEur(parseFloat(i.price)||0)}</span>
       <span style="text-align:right;font-weight:500;">${fmtEur(rowAmt(i))}</span>
@@ -103,8 +103,8 @@ function invLivePreview(){
       </div>
       <div>
         <div class="prev-party-label">To</div>
-        <div class="prev-party-name">${company||'\u2014'}</div>
-        <div class="prev-party-addr">${addr1?addr1+'<br/>':''}${addr2?addr2+'<br/>':''}${country?country+'<br/>':''}${contact?contact+'<br/>':''}${email||''}</div>
+        <div class="prev-party-name">${esc(company)||'\u2014'}</div>
+        <div class="prev-party-addr">${addr1?esc(addr1)+'<br/>':''}${addr2?esc(addr2)+'<br/>':''}${country?esc(country)+'<br/>':''}${contact?esc(contact)+'<br/>':''}${esc(email)||''}</div>
       </div>
     </div>
     <div class="prev-items-hdr">

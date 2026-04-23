@@ -63,7 +63,7 @@ function setCxlMode(mode){
 function renderCxlPer(){
   const c=document.getElementById('cxl-per-list');
   if(!c)return;
-  c.innerHTML=hotels.map(h=>`<div class="cxl-hotel-row"><span class="cxl-hotel-name" title="${h.name||'Hotel'}">${h.name||'Hotel'}</span><textarea placeholder="Cancellation policy..." oninput="sh(${h.id},'cxl',this.value)">${h.cxl||''}</textarea></div>`).join('')||'<div style="font-size:12px;color:var(--text2)">Add hotels above first</div>';
+  c.innerHTML=hotels.map(h=>`<div class="cxl-hotel-row"><span class="cxl-hotel-name" title="${esc(h.name)||'Hotel'}">${esc(h.name)||'Hotel'}</span><textarea placeholder="Cancellation policy..." oninput="sh(${h.id},'cxl',this.value)">${esc(h.cxl||'')}</textarea></div>`).join('')||'<div style="font-size:12px;color:var(--text2)">Add hotels above first</div>';
 }
 function addHotel(){
   const id=hc++;
@@ -81,7 +81,7 @@ function rh(){
   document.getElementById('hotels').innerHTML=hotels.map(h=>`
     <div class="hotel-block">
       <div class="hotel-hdr" id="hdr-${h.id}">
-        <input type="text" placeholder="Hotel name" value="${h.name}" oninput="sh(${h.id},'name',this.value)" autocomplete="off"/>
+        <input type="text" placeholder="Hotel name" value="${esc(h.name)}" oninput="sh(${h.id},'name',this.value)" autocomplete="off"/>
         <button class="delbtn" onclick="delHotel(${h.id})">×</button>
       </div>
       <div class="hotel-body">

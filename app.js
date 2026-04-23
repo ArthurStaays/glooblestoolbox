@@ -4,6 +4,8 @@
    Tool logic lives in tools/ (calc, offer, confirm, invoice, whatsapp, presb).
    ============================================================================= */
 
+function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
 // --- VIEW SWITCHING ---
 const toolLabels={offer:'offer builder',price:'price calculator',confirm:'booking confirmation',invoice:'invoice generator',waformat:'whatsapp formatter',presb:'presentation builder'};
 let openTabs=['home'];
