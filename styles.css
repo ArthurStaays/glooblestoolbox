@@ -174,7 +174,11 @@ textarea{resize:vertical;min-height:52px;}
 .prev-totals{margin-top:12px;margin-left:auto;width:200px;}
 .prev-total-row{display:flex;justify-content:space-between;font-size:10px;padding:3px 0;}
 .prev-total-row.grand{font-weight:600;font-size:12px;border-top:0.5px solid var(--border);margin-top:6px;padding-top:6px;}
-.prev-footer{margin-top:32px;padding-top:12px;border-top:0.5px solid var(--border);font-size:9px;color:#aaa;text-align:center;}
+.prev-rib{margin-top:24px;padding-top:14px;border-top:0.5px solid var(--border);}
+.prev-rib-intro{font-size:9px;color:#888;margin-bottom:8px;}
+.prev-rib-cols{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:9.5px;color:var(--black);line-height:1.7;}
+.prev-rib-cols strong{font-size:10px;}
+.prev-footer{margin-top:20px;padding-top:12px;border-top:0.5px solid var(--border);font-size:9px;color:#aaa;text-align:center;}
 
 /* FOOTER */
 footer{border-top:0.5px solid var(--border);padding:1.25rem 2.5rem;display:flex;align-items:center;justify-content:space-between;}

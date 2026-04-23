@@ -757,7 +757,7 @@ function invLivePreview(){
     <div class="prev-header">
       <div class="prev-logo">gloobles</div>
       <div class="prev-meta">
-        <div><strong>Ref.</strong> ${num}</div>
+        <div><strong>Stay confirmation n°</strong> ${num}</div>
         <div>Issued: ${issue||'\u2014'}</div>
         <div>Due: ${due||'\u2014'}</div>
       </div>
@@ -769,7 +769,7 @@ function invLivePreview(){
         <div class="prev-party-addr">Prinsengracht 821<br/>1015 DZ Amsterdam<br/>Netherlands<br/>finance@gloobles.com</div>
       </div>
       <div>
-        <div class="prev-party-label">Bill to</div>
+        <div class="prev-party-label">To</div>
         <div class="prev-party-name">${company||'\u2014'}</div>
         <div class="prev-party-addr">${addr1?addr1+'<br/>':''}${addr2?addr2+'<br/>':''}${country?country+'<br/>':''}${contact?contact+'<br/>':''}${email||''}</div>
       </div>
@@ -782,6 +782,13 @@ function invLivePreview(){
       <div class="prev-total-row"><span style="color:#888;">Subtotal</span><span>${fmtEur(subtotal)}</span></div>
       <div class="prev-total-row"><span style="color:#888;">${taxLabel}</span><span>${fmtEur(tax)}</span></div>
       <div class="prev-total-row grand"><span>Total</span><span>${fmtEur(subtotal+tax)}</span></div>
+    </div>
+    <div class="prev-rib">
+      <div class="prev-rib-intro">Please address the payment to gloobles BV using :</div>
+      <div class="prev-rib-cols">
+        <div><strong>EUR account</strong><br/>IBAN: NL67 ABNA 0825 6779 04<br/>BIC: ABNANL2A</div>
+        <div><strong>USD account</strong><br/>IBAN: NL49 ABNA 0142 6111 15<br/>BIC: ABNANL2A</div>
+      </div>
     </div>
     <div class="prev-footer">gloobles b.v. — Prinsengracht 821, 1015 DZ Amsterdam — KVK 12345678 — VAT NL123456789B01</div>`;
 }
@@ -805,13 +812,13 @@ function generateInvoicePDF(){
   doc.setFont('helvetica','bold');doc.setFontSize(18);doc.setTextColor(14,14,14);
   doc.text('gloobles',margin,24);
   doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(120,120,120);
-  doc.text(`Ref. ${num}`,W-margin,18,{align:'right'});
+  doc.text(`Stay confirmation n° ${num}`,W-margin,18,{align:'right'});
   doc.text(`Issued: ${issue}`,W-margin,23,{align:'right'});
   doc.text(`Due: ${due}`,W-margin,28,{align:'right'});
   doc.setDrawColor(220,220,220);doc.line(margin,32,W-margin,32);
   let y=60;
   doc.setFontSize(8);doc.setTextColor(160,160,160);
-  doc.text('FROM',margin,y);doc.text('BILL TO',W/2,y);
+  doc.text('FROM',margin,y);doc.text('TO',W/2,y);
   y+=5;
   doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(14,14,14);
   doc.text('gloobles b.v.',margin,y);
@@ -841,6 +848,18 @@ function generateInvoicePDF(){
   y+=3;doc.setDrawColor(200,200,200);doc.line(tX,y,W-margin,y);y+=6;
   doc.setFont('helvetica','bold');doc.setFontSize(11);doc.setTextColor(14,14,14);
   doc.text('Total',tX,y);doc.text(fmtEur(subtotal+tax),W-margin,y,{align:'right'});
+  const ribY=y+20;
+  doc.setDrawColor(220,220,220);doc.line(margin,ribY,W-margin,ribY);
+  doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(120,120,120);
+  doc.text('Please address the payment to gloobles BV using :',margin,ribY+8);
+  doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(14,14,14);
+  doc.text('EUR account',margin,ribY+16);
+  doc.text('USD account',W/2,ribY+16);
+  doc.setFont('helvetica','normal');doc.setTextColor(80,80,80);
+  doc.text('IBAN: NL67 ABNA 0825 6779 04',margin,ribY+22);
+  doc.text('BIC: ABNANL2A',margin,ribY+27);
+  doc.text('IBAN: NL49 ABNA 0142 6111 15',W/2,ribY+22);
+  doc.text('BIC: ABNANL2A',W/2,ribY+27);
   doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(180,180,180);
   doc.text('gloobles b.v. — Prinsengracht 821, 1015 DZ Amsterdam — KVK 12345678 — VAT NL123456789B01',W/2,280,{align:'center'});
   doc.save(`gloobles-${num}.pdf`);
