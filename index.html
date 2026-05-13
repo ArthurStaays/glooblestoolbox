@@ -261,6 +261,13 @@
     <div class="app">
       <div class="panel">
         <div class="ptitle">Offer details</div>
+        <div class="sec" style="padding-bottom:10px;border-bottom:0.5px solid var(--border);">
+          <div class="lbl">Language</div>
+          <div class="toggle-group" style="max-width:160px;">
+            <button class="tog-btn offer-lang-btn active" data-lang="EN" onclick="setOfferLang('EN')">EN</button>
+            <button class="tog-btn offer-lang-btn" data-lang="FR" onclick="setOfferLang('FR')">FR</button>
+          </div>
+        </div>
         <div class="sec">
           <div class="lbl">Client name</div>
           <input type="text" id="client" placeholder="Richard" />
@@ -586,6 +593,20 @@
     <div class="app">
       <div class="panel">
         <div class="ptitle">Message</div>
+        <div class="sec" style="margin-bottom:10px;padding-bottom:10px;border-bottom:0.5px solid var(--border);">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+            <span class="lbl" style="margin:0;">Templates</span>
+            <div class="toggle-group" style="margin:0;gap:4px;">
+              <button class="tog-btn waf-lang-btn active" data-lang="EN" onclick="setWafLang('EN')" style="flex:none;padding:3px 10px;font-size:11px;">EN</button>
+              <button class="tog-btn waf-lang-btn" data-lang="FR" onclick="setWafLang('FR')" style="flex:none;padding:3px 10px;font-size:11px;">FR</button>
+            </div>
+          </div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <button class="tog-btn" data-waf-tpl="proposal" onclick="loadWafTemplate('proposal')" style="font-size:11px;padding:5px 12px;">Hotel proposal</button>
+            <button class="tog-btn" data-waf-tpl="confirmation" onclick="loadWafTemplate('confirmation')" style="font-size:11px;padding:5px 12px;">Stay confirmation</button>
+            <button class="tog-btn" data-waf-tpl="followup" onclick="loadWafTemplate('followup')" style="font-size:11px;padding:5px 12px;">Follow-up</button>
+          </div>
+        </div>
         <div class="waf-toolbar">
           <button class="waf-btn waf-bold" onmousedown="event.preventDefault();wafFormat('bold')" title="Bold">B</button>
           <button class="waf-btn waf-italic" onmousedown="event.preventDefault();wafFormat('italic')" title="Italic">I</button>

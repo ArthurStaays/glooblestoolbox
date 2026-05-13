@@ -1,5 +1,32 @@
 /* === WHATSAPP FORMATTER === */
 
+let wafLang='EN';
+
+const WAF_TEMPLATES={
+  proposal:{EN:``,FR:``},
+  confirmation:{EN:``,FR:``},
+  followup:{EN:``,FR:``}
+};
+
+const WAF_TPL_LABELS={
+  proposal:{EN:'Hotel proposal',FR:'Proposition hôtel'},
+  confirmation:{EN:'Stay confirmation',FR:'Confirmation séjour'},
+  followup:{EN:'Follow-up',FR:'Relance'}
+};
+
+function setWafLang(lang){
+  wafLang=lang;
+  document.querySelectorAll('.waf-lang-btn').forEach(b=>b.classList.toggle('active',b.dataset.lang===lang));
+  document.querySelectorAll('[data-waf-tpl]').forEach(b=>b.textContent=WAF_TPL_LABELS[b.dataset.wafTpl][lang]);
+}
+
+function loadWafTemplate(key){
+  const ta=document.getElementById('waf-input');
+  ta.value=WAF_TEMPLATES[key][wafLang];
+  ta.focus();
+  wafPreview();
+}
+
 function wafFormat(type){
   const ta=document.getElementById('waf-input');
   const start=ta.selectionStart,end=ta.selectionEnd;

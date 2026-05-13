@@ -133,14 +133,47 @@ function fmtDateRange(){
 }
 
 let lastMsg='';
+
+let offerLang='EN';
+const OFFER_L={
+  EN:{
+    nightWord:n=>n==='1'?'night':'nights',
+    greeting:c=>`Dear ${c},`,
+    intro:(n,nw,dest,dp)=>`I'm pleased to share some options for your ${n} ${nw} in *${dest}*${dp}. Thank you so much for trusting me with this request.`,
+    priceTotal:(p,n,nw)=>`€${p} for ${n} ${nw}`,
+    priceNight:p=>`€${p} per night`,
+    cxlPrefix:'Cancellation: ',
+    cxlTitle:'*Cancellation policy*',
+    perks:`At gloobles, we always work hard to ensure you have the very best experience wherever you go.\n\nCurious what that looks like?\n• A delicious daily breakfast, on the house.\n• A room upgrade, whenever we can swing it.\n• Check-in and check-out at times that suit you.\n• Some extra spending credit.\n• Special welcome present & note.`,
+    closing:a=>`Do let us know your thoughts at your soonest convenience and don't hesitate if you have any questions. We look forward to hearing from you!\n\nWarm regards,\n${a}`,
+  },
+  FR:{
+    nightWord:n=>n==='1'?'nuit':'nuits',
+    greeting:c=>`Bonjour ${c},`,
+    intro:(n,nw,dest,dp)=>`Je suis ravi(e) de vous présenter quelques options pour votre séjour de ${n} ${nw} à *${dest}*${dp}. Merci de nous faire confiance pour ce voyage.`,
+    priceTotal:(p,n,nw)=>`€${p} pour ${n} ${nw}`,
+    priceNight:p=>`€${p} par nuit`,
+    cxlPrefix:'Annulation : ',
+    cxlTitle:'*Politique d\'annulation*',
+    perks:`Chez gloobles, nous mettons tout en œuvre pour vous offrir la meilleure expérience possible, où que vous alliez.\n\nEnvie de savoir ce que ça inclut ?\n• Un délicieux petit-déjeuner quotidien, offert.\n• Un surclassement de chambre, dès que possible.\n• Des horaires d'arrivée et de départ flexibles.\n• Un crédit de dépenses supplémentaire.\n• Un cadeau et un mot de bienvenue personnalisés.`,
+    closing:a=>`N'hésitez pas à nous faire part de vos retours dès que possible et à nous contacter si vous avez la moindre question. Nous avons hâte de vous lire !\n\nChaleureusement,\n${a}`,
+  }
+};
+
+function setOfferLang(lang){
+  offerLang=lang;
+  document.querySelectorAll('.offer-lang-btn').forEach(b=>b.classList.toggle('active',b.dataset.lang===lang));
+}
+
 function gen(){
+  const L=OFFER_L[offerLang];
   const client=document.getElementById('client').value.trim()||'there';
   const dest=document.getElementById('dest').value.trim()||'your destination';
   const nights=document.getElementById('nights').value||'2';
   const opener=document.getElementById('opener').value.trim();
   const agent=document.getElementById('agent').value.trim()||'The gloobles Team';
   const dateRange=fmtDateRange();
-  const nightWord=nights==='1'?'night':'nights';
+  const nightWord=L.nightWord(nights);
   let hotelLines='';
   hotels.forEach(h=>{
     const name=h.name||'Hotel';
@@ -150,20 +183,20 @@ function gen(){
       let price='';
       if(r.price){
         const total=Number(r.price);
-        if(priceMode==='total'){price=`€${total.toLocaleString('fr-FR',{maximumFractionDigits:0})} for ${nights} ${nightWord}`;}
-        else{price=`€${total.toLocaleString('fr-FR',{maximumFractionDigits:0})} per night`;}
+        if(priceMode==='total'){price=L.priceTotal(total.toLocaleString('fr-FR',{maximumFractionDigits:0}),nights,nightWord);}
+        else{price=L.priceNight(total.toLocaleString('fr-FR',{maximumFractionDigits:0}));}
       }
       hotelLines+=`• ${rname}${price}\n`;
     });
     if(h.note&&h.note.trim())hotelLines+=`_${h.note.trim()}_\n`;
-    if(cxlMode==='per'&&h.cxl&&h.cxl.trim())hotelLines+=`_Cancellation: ${h.cxl.trim()}_\n`;
+    if(cxlMode==='per'&&h.cxl&&h.cxl.trim())hotelLines+=`_${L.cxlPrefix}${h.cxl.trim()}_\n`;
   });
   if(!hotelLines.trim())hotelLines='\n• (no hotels added)\n';
   const cxlAllText=document.getElementById('cxl-all-text').value.trim();
-  const cxlBlock=(cxlMode==='all'&&cxlAllText)?`\n*Cancellation policy*\n${cxlAllText}\n`:'';
+  const cxlBlock=(cxlMode==='all'&&cxlAllText)?`\n${L.cxlTitle}\n${cxlAllText}\n`:'';
   const intro=opener?`${opener}\n\n`:'';
   const datePart=dateRange?`, *${dateRange}*`:'';
-  const msg=`Dear ${client},\n\n${intro}I'm pleased to share some options for your ${nights} ${nightWord} in *${dest}*${datePart}. Thank you so much for trusting me with this request.\n${hotelLines}${cxlBlock}\nAt gloobles, we always work hard to ensure you have the very best experience wherever you go.\n\nCurious what that looks like?\n• A delicious daily breakfast, on the house.\n• A room upgrade, whenever we can swing it.\n• Check-in and check-out at times that suit you.\n• Some extra spending credit.\n• Special welcome present & note.\n\nDo let us know your thoughts at your soonest convenience and don't hesitate if you have any questions. We look forward to hearing from you!\n\nWarm regards,\n${agent}`;
+  const msg=`${L.greeting(client)}\n\n${intro}${L.intro(nights,nightWord,dest,datePart)}\n${hotelLines}${cxlBlock}\n${L.perks}\n\n${L.closing(agent)}`;
   lastMsg=msg;
   const now=new Date();
   const t=`${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
