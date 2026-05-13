@@ -491,6 +491,17 @@
           </div>
         </div>
         <div class="sec">
+          <div class="lbl">Currency</div>
+          <div class="toggle-group" style="flex-wrap:wrap;gap:5px;">
+            <button class="tog-btn inv-cur-btn active" data-cur="EUR" onclick="setInvCurrency('EUR')">€ EUR</button>
+            <button class="tog-btn inv-cur-btn" data-cur="USD" onclick="setInvCurrency('USD')">$ USD</button>
+            <button class="tog-btn inv-cur-btn" data-cur="GBP" onclick="setInvCurrency('GBP')">£ GBP</button>
+            <button class="tog-btn inv-cur-btn" data-cur="CHF" onclick="setInvCurrency('CHF')">CHF</button>
+            <button class="tog-btn inv-cur-btn" data-cur="AUD" onclick="setInvCurrency('AUD')">A$ AUD</button>
+            <button class="tog-btn inv-cur-btn" data-cur="JPY" onclick="setInvCurrency('JPY')">¥ JPY</button>
+          </div>
+        </div>
+        <div class="sec">
           <div class="row2">
             <div>
               <div class="lbl">Date of issue</div>
@@ -526,7 +537,7 @@
           <div class="inv-item-hdr">
             <span style="font-size:10px;color:var(--text2);">Description</span>
             <span style="font-size:10px;color:var(--text2);">Qty</span>
-            <span style="font-size:10px;color:var(--text2);">Unit price (€)</span>
+            <span style="font-size:10px;color:var(--text2);" id="inv-unit-price-lbl">Unit price (€)</span>
             <span style="font-size:10px;color:var(--text2);">Amount</span>
             <span></span>
           </div>
@@ -541,7 +552,7 @@
               <input type="text" id="inv-tax-label" placeholder="Local tax" oninput="calcInvTotal()" />
             </div>
             <div>
-              <div class="lbl">Tax amount (€)</div>
+              <div class="lbl" id="inv-tax-amt-lbl">Tax amount (€)</div>
               <input type="number" id="inv-tax-amount" placeholder="0" step="0.01" oninput="calcInvTotal()" />
             </div>
           </div>

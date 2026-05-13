@@ -4,6 +4,16 @@
 let invItems=[];
 let invItemId=0;
 
+const INV_CURRENCIES={
+  EUR:{symbol:'€',decimals:2},
+  USD:{symbol:'$',decimals:2},
+  GBP:{symbol:'£',decimals:2},
+  CHF:{symbol:'CHF',decimals:2},
+  AUD:{symbol:'A$',decimals:2},
+  JPY:{symbol:'¥',decimals:0},
+};
+let invCurrency='EUR';
+
 function initInvoice(){
   const today=new Date();
   const due=new Date(today);
@@ -19,7 +29,22 @@ function fmtInvDate(str){
   return d.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
 }
 
-function fmtEur(n){const v=(n||0).toFixed(2);const[i,d]=v.split('.');return'\u20ac '+i.replace(/\B(?=(\d{3})+(?!\d))/g,' ')+','+d;}
+function fmtMoney(n){
+  const cur=INV_CURRENCIES[invCurrency];
+  const v=(n||0).toFixed(cur.decimals);
+  const[i,d]=v.split('.');
+  const thou=i.replace(/\B(?=(\d{3})+(?!\d))/g,' ');
+  return cur.decimals>0?cur.symbol+' '+thou+','+d:cur.symbol+' '+thou;
+}
+
+function setInvCurrency(code){
+  invCurrency=code;
+  document.querySelectorAll('.inv-cur-btn').forEach(b=>b.classList.toggle('active',b.dataset.cur===code));
+  const sym=INV_CURRENCIES[code].symbol;
+  document.getElementById('inv-unit-price-lbl').textContent=`Unit price (${sym})`;
+  document.getElementById('inv-tax-amt-lbl').textContent=`Tax amount (${sym})`;
+  calcInvTotal();
+}
 
 function rowAmt(item){return(parseFloat(item.qty)||0)*(parseFloat(item.price)||0);}
 
@@ -40,7 +65,7 @@ function renderInvItems(){
       <input type="text" placeholder="Description" value="${item.desc}" oninput="updateInvItem(${item.id},'desc',this.value)"/>
       <input type="number" placeholder="1" value="${item.qty===1&&item.desc===''?'':item.qty}" min="1" oninput="updateInvItem(${item.id},'qty',this.value)" style="text-align:center;"/>
       <input type="number" placeholder="0.00" value="${item.price}" step="0.01" oninput="updateInvItem(${item.id},'price',this.value)"/>
-      <div class="inv-amt-cell" id="inv-amt-${item.id}">${fmtEur(rowAmt(item))}</div>
+      <div class="inv-amt-cell" id="inv-amt-${item.id}">${fmtMoney(rowAmt(item))}</div>
       <button class="delbtn" onclick="removeInvItem(${item.id})">×</button>
     </div>`).join('');
   calcInvTotal();
@@ -51,7 +76,7 @@ function updateInvItem(id,field,val){
   if(!item)return;
   item[field]=field==='qty'||field==='price'?parseFloat(val)||0:val;
   const el=document.getElementById(`inv-amt-${id}`);
-  if(el)el.textContent=fmtEur(rowAmt(item));
+  if(el)el.textContent=fmtMoney(rowAmt(item));
   calcInvTotal();
 }
 
@@ -59,10 +84,10 @@ function calcInvTotal(){
   const subtotal=invItems.reduce((s,i)=>s+rowAmt(i),0);
   const tax=parseFloat(document.getElementById('inv-tax-amount').value)||0;
   const taxLabel=document.getElementById('inv-tax-label').value||'Tax';
-  document.getElementById('inv-subtotal').textContent=fmtEur(subtotal);
+  document.getElementById('inv-subtotal').textContent=fmtMoney(subtotal);
   document.getElementById('inv-tax-label-disp').textContent=taxLabel;
-  document.getElementById('inv-tax-disp').textContent=fmtEur(tax);
-  document.getElementById('inv-total-disp').textContent=fmtEur(subtotal+tax);
+  document.getElementById('inv-tax-disp').textContent=fmtMoney(tax);
+  document.getElementById('inv-total-disp').textContent=fmtMoney(subtotal+tax);
   invLivePreview();
 }
 
@@ -83,8 +108,8 @@ function invLivePreview(){
     <div class="prev-item-row">
       <span>${esc(i.desc)||'\u2014'}</span>
       <span style="text-align:center;">${parseFloat(i.qty)||1}</span>
-      <span style="text-align:right;">${fmtEur(parseFloat(i.price)||0)}</span>
-      <span style="text-align:right;font-weight:500;">${fmtEur(rowAmt(i))}</span>
+      <span style="text-align:right;">${fmtMoney(parseFloat(i.price)||0)}</span>
+      <span style="text-align:right;font-weight:500;">${fmtMoney(rowAmt(i))}</span>
     </div>`).join('');
   document.getElementById('inv-preview').innerHTML=`
     <div class="prev-header">
@@ -112,9 +137,9 @@ function invLivePreview(){
     </div>
     ${itemRows}
     <div class="prev-totals">
-      <div class="prev-total-row"><span style="color:#888;">Subtotal</span><span>${fmtEur(subtotal)}</span></div>
-      <div class="prev-total-row"><span style="color:#888;">${taxLabel}</span><span>${fmtEur(tax)}</span></div>
-      <div class="prev-total-row grand"><span>Total</span><span>${fmtEur(subtotal+tax)}</span></div>
+      <div class="prev-total-row"><span style="color:#888;">Subtotal</span><span>${fmtMoney(subtotal)}</span></div>
+      <div class="prev-total-row"><span style="color:#888;">${taxLabel}</span><span>${fmtMoney(tax)}</span></div>
+      <div class="prev-total-row grand"><span>Total</span><span>${fmtMoney(subtotal+tax)}</span></div>
     </div>
     <div class="prev-rib">
       <div class="prev-rib-intro">Please address the payment to gloobles BV using :</div>
@@ -169,18 +194,18 @@ function generateInvoicePDF(){
   invItems.forEach(item=>{
     doc.text(item.desc||'\u2014',margin,y);
     doc.text(String(parseFloat(item.qty)||1),130,y,{align:'right'});
-    doc.text(fmtEur(parseFloat(item.price)||0),160,y,{align:'right'});
-    doc.text(fmtEur(rowAmt(item)),W-margin,y,{align:'right'});
+    doc.text(fmtMoney(parseFloat(item.price)||0),160,y,{align:'right'});
+    doc.text(fmtMoney(rowAmt(item)),W-margin,y,{align:'right'});
     doc.setDrawColor(240,240,240);doc.line(margin,y+3,W-margin,y+3);y+=9;
   });
   y+=6;const tX=140;
   doc.setFontSize(9);doc.setTextColor(120,120,120);
-  doc.text('Subtotal',tX,y);doc.setTextColor(14,14,14);doc.text(fmtEur(subtotal),W-margin,y,{align:'right'});
+  doc.text('Subtotal',tX,y);doc.setTextColor(14,14,14);doc.text(fmtMoney(subtotal),W-margin,y,{align:'right'});
   y+=7;doc.setTextColor(120,120,120);doc.text(taxLabel,tX,y);
-  doc.setTextColor(14,14,14);doc.text(fmtEur(tax),W-margin,y,{align:'right'});
+  doc.setTextColor(14,14,14);doc.text(fmtMoney(tax),W-margin,y,{align:'right'});
   y+=3;doc.setDrawColor(200,200,200);doc.line(tX,y,W-margin,y);y+=6;
   doc.setFont('helvetica','bold');doc.setFontSize(11);doc.setTextColor(14,14,14);
-  doc.text('Total',tX,y);doc.text(fmtEur(subtotal+tax),W-margin,y,{align:'right'});
+  doc.text('Total',tX,y);doc.text(fmtMoney(subtotal+tax),W-margin,y,{align:'right'});
   const ribY=y+20;
   doc.setDrawColor(220,220,220);doc.line(margin,ribY,W-margin,ribY);
   doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(120,120,120);
