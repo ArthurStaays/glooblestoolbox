@@ -7,7 +7,7 @@
 function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 
 // --- VIEW SWITCHING ---
-const toolLabels={offer:'offer builder',price:'price calculator',confirm:'booking confirmation',invoice:'invoice generator',waformat:'whatsapp formatter',presb:'presentation builder'};
+const toolLabels={offer:'offer builder',price:'price calculator',confirm:'booking confirmation',invoice:'invoice generator',waformat:'whatsapp formatter',presb:'presentation builder',concierge:'concierge fee analysis'};
 let openTabs=['home'];
 let navHistory=[];
 let currentView='home';

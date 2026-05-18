@@ -72,6 +72,20 @@
     </div>
   </div>
   <div class="section" style="padding-top:0">
+    <div class="section-label">internal</div>
+    <div class="tools-grid">
+      <button class="tool-card" onclick="openTool('concierge')">
+        <div class="tool-tag"><span class="tool-dot"></span>active</div>
+        <div class="tool-name">concierge fee analysis</div>
+        <div class="tool-desc">log concierge requests case by case — time, complexity, fee instinct — to build our future pricing structure.</div>
+        <span class="tool-arrow">↗</span>
+      </button>
+      <div class="tool-empty"></div>
+      <div class="tool-empty"></div>
+      <div class="tool-empty"></div>
+    </div>
+  </div>
+  <div class="section" style="padding-top:0">
     <div class="section-label">coming soon</div>
     <div class="tools-grid">
       <div class="tool-card coming-soon">
@@ -89,6 +103,216 @@
       <div class="tool-empty"></div>
       <div class="tool-empty"></div>
       <div class="tool-empty"></div>
+    </div>
+  </div>
+</div>
+
+<!-- CONCIERGE FEE ANALYSIS VIEW -->
+<div class="view" id="view-concierge">
+  <div class="ob-wrap">
+    <div style="font-family:'DM Mono',monospace;font-size:15px;font-weight:400;color:#0e0e0e;letter-spacing:.02em;margin-bottom:1.25rem;">gloobles</div>
+    <div class="cxg-wrap">
+
+      <!-- TABS -->
+      <div class="cxg-tabs">
+        <button class="cxg-tab active" id="cxg-tab-form" onclick="cxgShowTab('form')">New report</button>
+        <button class="cxg-tab" id="cxg-tab-results" onclick="cxgShowTab('results')">Results <span id="cxg-tab-count" class="cxg-tab-badge"></span></button>
+      </div>
+
+      <!-- FORM SECTION -->
+      <div id="cxg-form-section">
+        <div id="cxg-success-banner" class="cxg-success">
+          <h3>Report submitted</h3>
+          <p>This case has been recorded.</p>
+          <div id="cxg-sync-status" style="font-size:12px;margin:6px 0;min-height:18px;"></div>
+          <div style="display:flex;gap:8px;justify-content:center;margin-top:10px;">
+            <button class="add-room" onclick="cxgResetForm()">+ New report</button>
+            <button class="add-room" onclick="cxgShowTab('results')">View results →</button>
+          </div>
+        </div>
+        <div id="cxg-form-body">
+          <div class="panel" style="margin-bottom:10px;">
+            <div class="ptitle">Designer & booking info</div>
+            <div class="sec">
+              <div class="cxg-grid-2">
+                <div><div class="lbl">Your name</div><input type="text" id="cxg-designer" placeholder="Full name" /></div>
+                <div><div class="lbl">Booking / client ref.</div><input type="text" id="cxg-booking-ref" placeholder="e.g. BK-2024-0421" /></div>
+                <div>
+                  <div class="lbl">Trip type</div>
+                  <select id="cxg-trip-type" onchange="cxgToggleOther(this,'cxg-trip-type-other')">
+                    <option value="">Select…</option>
+                    <option>Itinerary (multiple hotels / destinations)</option>
+                    <option>Single booking (one destination & hotel)</option>
+                    <option>Concierge only</option>
+                    <option value="__other__">Other…</option>
+                  </select>
+                  <input type="text" id="cxg-trip-type-other" placeholder="Specify…" style="display:none;margin-top:6px;" />
+                </div>
+                <div><div class="lbl">Destination</div><input type="text" id="cxg-destination" placeholder="e.g. Paris, Maldives…" /></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel" style="margin-bottom:10px;">
+            <div class="ptitle">The concierge request</div>
+            <div class="sec">
+              <div class="lbl">Request categories</div>
+              <div class="cxg-cat-palette" id="cxg-cat-palette"></div>
+              <div id="cxg-other-wrap" style="display:none;margin-top:8px;display:none;">
+                <input type="text" id="cxg-cat-other-input" placeholder="Specify category…" onkeydown="if(event.key==='Enter')cxgAddOther()" />
+                <button class="add-room" onclick="cxgAddOther()">+ Add</button>
+              </div>
+              <div id="cxg-subfields-container"></div>
+              <div id="cxg-cat-times"></div>
+            </div>
+            <div class="sec">
+              <div style="max-width:200px;">
+                <div class="lbl">Days the file was open</div>
+                <input type="number" id="cxg-days-span" placeholder="e.g. 3" min="1" oninput="cxgUpdateSummary()" />
+              </div>
+            </div>
+            <div class="sec">
+              <div class="cxg-grid-2">
+                <div>
+                  <div class="lbl">Channel received</div>
+                  <select id="cxg-channel" onchange="cxgToggleOther(this,'cxg-channel-other')">
+                    <option value="">Select…</option><option>WhatsApp</option><option>Email</option><option value="__other__">Other…</option>
+                  </select>
+                  <input type="text" id="cxg-channel-other" placeholder="Specify…" style="display:none;margin-top:6px;" />
+                </div>
+                <div>
+                  <div class="lbl">No. of suppliers contacted</div>
+                  <input type="number" id="cxg-suppliers" placeholder="e.g. 3" min="0" />
+                </div>
+              </div>
+            </div>
+            <div class="sec">
+              <div class="lbl">Description of the request</div>
+              <textarea id="cxg-description" placeholder="What did the client ask for? Specific constraints, last-minute pressure, special context…"></textarea>
+            </div>
+          </div>
+
+          <div class="panel" style="margin-bottom:10px;">
+            <div class="ptitle">Effort & outcome</div>
+            <div class="sec">
+              <div class="cxg-grid-2">
+                <div>
+                  <div class="lbl">Complexity</div>
+                  <select id="cxg-complexity" onchange="cxgToggleOther(this,'cxg-complexity-other')">
+                    <option value="">Select…</option>
+                    <option>Simple — 1 contact, resolved quickly</option>
+                    <option>Medium — 2–3 contacts, some research</option>
+                    <option>Complex — 4+ contacts, extensive coordination</option>
+                    <option value="__other__">Other…</option>
+                  </select>
+                  <input type="text" id="cxg-complexity-other" placeholder="Specify…" style="display:none;margin-top:6px;" />
+                </div>
+                <div>
+                  <div class="lbl">Outcome</div>
+                  <select id="cxg-outcome" onchange="cxgToggleOther(this,'cxg-outcome-other')">
+                    <option value="">Select…</option>
+                    <option>Fully resolved</option><option>Partially resolved</option>
+                    <option>Not resolved — alternative offered</option><option>Client declined solution</option>
+                    <option value="__other__">Other…</option>
+                  </select>
+                  <input type="text" id="cxg-outcome-other" placeholder="Specify…" style="display:none;margin-top:6px;" />
+                </div>
+                <div>
+                  <div class="lbl">Last-minute? (under 48h)</div>
+                  <select id="cxg-last-minute" onchange="cxgToggleOther(this,'cxg-last-minute-other')">
+                    <option value="">Select…</option>
+                    <option>Yes — under 24h</option><option>Yes — 24–48h</option><option>No — planned in advance</option>
+                    <option value="__other__">Other…</option>
+                  </select>
+                  <input type="text" id="cxg-last-minute-other" placeholder="Specify…" style="display:none;margin-top:6px;" />
+                </div>
+                <div>
+                  <div class="lbl">Client perceived value</div>
+                  <select id="cxg-perceived-value" onchange="cxgToggleOther(this,'cxg-perceived-value-other')">
+                    <option value="">Select…</option>
+                    <option>High — client expressed strong gratitude</option>
+                    <option>Medium — appreciated but routine</option>
+                    <option>Low — client considered it standard</option>
+                    <option>Unknown</option><option value="__other__">Other…</option>
+                  </select>
+                  <input type="text" id="cxg-perceived-value-other" placeholder="Specify…" style="display:none;margin-top:6px;" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel" style="margin-bottom:10px;">
+            <div class="ptitle">Your instinct on fees</div>
+            <div class="sec">
+              <div class="cxg-grid-2">
+                <div>
+                  <div class="lbl">Suggested fee (€)</div>
+                  <input type="number" id="cxg-suggested-fee" placeholder="e.g. 50" min="0" oninput="cxgUpdateSummary()" />
+                </div>
+                <div>
+                  <div class="lbl">Fee model</div>
+                  <select id="cxg-fee-model" onchange="cxgToggleOther(this,'cxg-fee-model-other')">
+                    <option value="">Select…</option>
+                    <option>Flat fee per request</option><option>% of service value</option>
+                    <option>Hourly / per 30 min block</option><option>Included — no charge justified</option>
+                    <option value="__other__">Other…</option>
+                  </select>
+                  <input type="text" id="cxg-fee-model-other" placeholder="Specify…" style="display:none;margin-top:6px;" />
+                </div>
+              </div>
+            </div>
+            <div class="sec">
+              <div class="lbl">Notes</div>
+              <textarea id="cxg-notes" placeholder="Specific difficulty, unusual circumstance, what made this worth charging for (or not)…"></textarea>
+            </div>
+          </div>
+
+          <div class="cxg-summary-bar" id="cxg-summary-bar">
+            <span id="cxg-sum-time">—</span>
+            <span id="cxg-sum-days">—</span>
+            <span id="cxg-sum-fee">€—</span>
+            <span id="cxg-sum-cats">—</span>
+          </div>
+          <button class="gen-btn" onclick="cxgSubmitReport()">Submit report</button>
+        </div>
+      </div>
+
+      <!-- RESULTS SECTION -->
+      <div id="cxg-results-section" style="display:none;">
+        <div id="cxg-pw-gate">
+          <div style="max-width:320px;margin:48px auto;">
+            <div class="panel">
+              <div class="ptitle">Results — restricted access</div>
+              <div class="sec">
+                <div class="lbl">Password</div>
+                <input type="password" id="cxg-res-pw" placeholder="Enter password" onkeydown="if(event.key==='Enter')cxgCheckResultsPw()" />
+                <div id="cxg-pw-err" style="display:none;font-size:12px;color:#c0392b;margin-top:6px;">Incorrect password.</div>
+              </div>
+              <button class="gen-btn" onclick="cxgCheckResultsPw()">Access results</button>
+            </div>
+          </div>
+        </div>
+        <div id="cxg-results-inner" style="display:none;">
+          <div class="panel" style="margin-bottom:12px;">
+            <div class="ptitle">Google Sheets sync</div>
+            <div class="sec">
+              <div class="lbl">Google Apps Script URL</div>
+              <div style="display:flex;gap:8px;align-items:center;">
+                <input type="url" id="cxg-sync-url-input" placeholder="https://script.google.com/macros/s/…/exec" style="flex:1;" value="" oninput="" />
+                <button class="add-room" onclick="cxgSaveEndpoint()">Save</button>
+                <span id="cxg-sync-config-status" style="font-size:12px;color:#3b6d11;min-width:50px;"></span>
+              </div>
+              <div style="font-size:11px;color:var(--text2);margin-top:6px;">When set, reports are sent here on submit and the dashboard loads global team data.</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;margin-bottom:12px;">
+            <button class="add-room" onclick="cxgExportData()">↓ Export backup (.json)</button>
+            <label class="add-room" style="cursor:pointer;">↑ Import (.json) <input type="file" accept=".json" onchange="cxgImportData(event)" style="display:none;" /></label>
+          </div>
+          <div id="cxg-dashboard"></div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -725,6 +949,7 @@
 <script src="tools/invoice.js"></script>
 <script src="tools/whatsapp.js"></script>
 <script src="tools/presb.js"></script>
+<script src="tools/concierge.js"></script>
 <script data-goatcounter="https://gloobleslab.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
 </body>
